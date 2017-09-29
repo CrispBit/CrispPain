@@ -3,20 +3,39 @@
   <head>
     <title>CrispPain ProjectInfo</title>
     <style>
-      table tr:nth-child(3) {
+      body {
+          background-color: #eee;
+          font-family: helvetica;
+          text-align: center;
+      }
+
+      table {
+          display: inline;
+          text-align: left;
+border-collapse: collapse;
+      }
+
+      table td {
+          padding: .5em;
+          font-size: 1.3em;
+          border-style: solid;
+          border-width: 1px;
+          border-color: black;
+      }
+      table tr td:first-child {
+          width: 300px;
+      }
+      table tr:nth-child(2) {
           font-weight: bold;
       }
     </style>
   </head>
   <body>
+    <h1>CrispPain Project Info</h1>
     <table>
       <tr>
-        <td>Project Name</td>
-        <td>CrispPain</td>
-      </tr>
-      <tr>
         <td>Project Description</td>
-        <td>Attach hurtboxes to bones and create interpolated hitboxes per frame.</td>
+        <td colspan="2">Attach hurtboxes to bones and create interpolated hitboxes per frame.</td>
       </tr>
       <tr>
         <td>Milestones</td>
@@ -40,12 +59,12 @@
       </tr>
       <tr>
         <td>Render mesh</td>
-        <td>2017-10-25</td>
+        <td>2017-10-30</td>
         <td>image</td>
       </tr>
       <tr>
         <td>Render hurtboxes on top of mesh</td>
-        <td>2017-11-05</td>
+        <td>2017-11-08</td>
         <td>image</td>
       </tr>
       <tr>
