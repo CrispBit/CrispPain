@@ -23,4 +23,16 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 
-target_link_libraries(crisppain ${QT_LIBRARIES})
+find_package(X11)
+
+# Detect and add SFML
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+#Find any version 2.X of SFML
+#See the FindSFML.cmake file for additional details and instructions
+find_package(SFML 2 REQUIRED graphics window)
+if(SFML_FOUND)
+  include_directories(${SFML_INCLUDE_DIR})
+  target_link_libraries(crisppain ${QT_LIBRARIES} ${X11_LIBRARIES} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+endif()
+
+
