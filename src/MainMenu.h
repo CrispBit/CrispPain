@@ -8,7 +8,7 @@ class MainMenu : public QMainWindow {
     Q_OBJECT
 public:
     explicit MainMenu(QWidget *parent = nullptr);
-    QMenu *file;
+    QMenu *menuBar;
 public slots:
     void open();
 };

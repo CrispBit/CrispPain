@@ -14,11 +14,11 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
             *quit = new QAction(quitPix, "&Quit", this);
     quit->setShortcut(tr("CTRL+Q"));
 
-    file = menuBar()->addMenu("&File");
-    file->addAction(newA);
-    file->addAction(open);
-    file->addSeparator();
-    file->addAction(quit);
+    menuBar = QMainWindow::menuBar()->addMenu("&File");
+    menuBar->addAction(newA);
+    menuBar->addAction(open);
+    menuBar->addSeparator();
+    menuBar->addAction(quit);
 
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
 

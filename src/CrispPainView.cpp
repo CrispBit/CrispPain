@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "MyCanvas.h"
 
-void something_Sane::onInit() {
+void CrispPainView::onInit() {
     // do stuffs;
 }
 
-void something_Sane::onUpdate() {
+void CrispPainView::onUpdate() {
     clear(sf::Color(255, 0, 0, 255));
 }

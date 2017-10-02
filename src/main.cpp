@@ -1,5 +1,5 @@
 #include "MainMenu.h"
-#include "MyCanvas.h"
+#include "CrispPainView.h"
 #include <iostream>
 #include <string>
 #include <QApplication>
@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
     window->setWindowTitle("Simple menu");
     window->show();
 
-    something_Sane *meems = new something_Sane(window, QPoint(0, window->file->height()), QSize(100, 100));
-    meems->show();
+    CrispPainView *view = new something_Sane(window, QPoint(1, window->menuBar->height()), QSize(100, 100));
+    view->show();
 
     return app.exec();
 }
