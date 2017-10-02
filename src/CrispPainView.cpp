@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "MyCanvas.h"
+#include "CrispPainView.h"
 
 void CrispPainView::onInit() {
     // do stuffs;
