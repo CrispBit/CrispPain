@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     window->setWindowTitle("Simple menu");
     window->show();
 
-    CrispPainView *view = new something_Sane(window, QPoint(1, window->menuBar->height()), QSize(100, 100));
+    CrispPainView *view = new CrispPainView(window, QPoint(1, window->menuBar->height()), QSize(100, 100));
     view->show();
 
     return app.exec();
