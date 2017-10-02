@@ -13,8 +13,8 @@ public:
     virtual ~QSFMLCanvas();
 
 private:
-    virtual void OnInit() = 0;
-    virtual void OnUpdate() = 0;
+    virtual void onInit() = 0;
+    virtual void onUpdate() = 0;
     virtual QPaintEngine *paintEngine() const;
     virtual void showEvent(QShowEvent *);
     virtual void paintEvent(QPaintEvent*);

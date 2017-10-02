@@ -14,7 +14,6 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
             *quit = new QAction(quitPix, "&Quit", this);
     quit->setShortcut(tr("CTRL+Q"));
 
-    QMenu *file;
     file = menuBar()->addMenu("&File");
     file->addAction(newA);
     file->addAction(open);
