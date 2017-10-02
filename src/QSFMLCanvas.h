@@ -3,20 +3,23 @@
 
 #include <SFML/Graphics.hpp>
 #include <QWidget>
+#include <QTimer>
 
 class QSFMLCanvas : public QWidget, public sf::RenderWindow {
     Q_OBJECT
 
 public:
-    explicit QSFMLCanvas(QWidget *parent);
+    QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& size, unsigned int frameTime = 0);
     virtual ~QSFMLCanvas();
 
 private:
     virtual void OnInit() = 0;
     virtual void OnUpdate() = 0;
-    virtual void showEvent(QShowEvent *);
     virtual QPaintEngine *paintEngine() const;
+    virtual void showEvent(QShowEvent *);
+    virtual void paintEvent(QPaintEvent*);
 
+    QTimer myTimer;
     bool myInitialized;
 };
 
