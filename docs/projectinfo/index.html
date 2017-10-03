@@ -11,85 +11,111 @@
       }
 
       table {
-          display: inline;
+          display: inline-block;
           text-align: left;
-border-collapse: collapse;
+          border-collapse: collapse;
       }
 
-      table td {
+      td, th {
           padding: .5em;
-          font-size: 1.3em;
           border-style: solid;
           border-width: 1px;
           border-color: black;
       }
-      table tr td:first-child {
-          width: 300px;
-      }
-      table tr:nth-child(2) {
-          font-weight: bold;
+
+      table tr td:nth-child(-n+3), table tr th:nth-child(-n+3) {
+          white-space: nowrap;
       }
     </style>
   </head>
   <body>
     <h1>CrispPain Project Info</h1>
+    <p>A program to create and attach hurtboxes to bones and create interpolated hitboxes per frame.</p>
     <table>
       <tr>
-        <td>Project Description</td>
-        <td colspan="3">Attach hurtboxes to bones and create interpolated hitboxes per frame.</td>
+        <th>Goal&nbsp%</th>
+        <th>Actual&nbsp%</th>
+        <th>Deadline</th>
+        <th>Milestones</th>
+        <th>Tasks</th>
+        <th>Assigned To</th>
+        <th>Completion Verification</th>
+        <th>Expected Result</th>
+        <th>Received Result</th>
+        <th>Deliverables</th>
       </tr>
       <tr>
-        <td>Status</td>
-        <td>Milestones</td>
-        <td>Deadline</td>
-        <td>Deliverables</td>
+        <td rowspan="2">100%</td>
+        <td rowspan="2">30%</td>
+        <td rowspan="2">2017-10-10</td>
+        <td rowspan="2">Display window and UI</td>
+        <td>Qt SFML Integration</td>
+        <td>Matthew Tran</td>
+        <td rowspan="2">Visual check</td>
+        <td rowspan="2">A window appears with a menu bar, side bar, and view in the middle that has the words "test" in white against a black background</td>
+        <td rowspan="2"></td>
+        <td rowspan="2">Screenshot of expected result</td>
       </tr>
       <tr>
-        <td>30%</td>
-        <td>Display window and UI</td>
-        <td>2017-10-10</td>
-        <td>image</td>
+        <td>Integration into CrispSynth</td>
+        <td>Abraham Hamidi</td>
+      </tr>
+      <tr>
+        <td rowspan="2">0%</td>
+        <td rowspan="2">0%</td>
+        <td rowspan="2">2017-10-15</td>
+        <td rowspan="2">Create box fileformat</td>
+        <td>Hitbox specification</td>
+        <td>Abraham Hamidi</td>
+        <td rowspan="2">Visual check</td>
+        <td rowspan="2">A text file that specifies the data format in which hitboxes and hurtboxes will be stored.</td>
+        <td rowspan="2"></td>
+        <td rowspan="2">Link to documentation</td>
+      </tr>
+      <tr>
+        <td>Hurtbox specification</td>
+        <td>Matthew Tran</td>
       </tr>
       <tr>
         <td>0%</td>
-        <td>Create box fileformat</td>
-        <td>2017-10-15</td>
-        <td>link to doc</td>
-      </tr>
-      <tr>
         <td>0%</td>
-        <td>Load boned mesh</td>
         <td>2017-10-20</td>
+        <td>Load boned mesh</td>
         <td>link to video</td>
       </tr>
       <tr>
         <td>0%</td>
-        <td>Render mesh</td>
+        <td>0%</td>
         <td>2017-10-30</td>
+        <td>Render mesh</td>
         <td>image</td>
       </tr>
       <tr>
         <td>0%</td>
-        <td>Render hurtboxes on top of mesh</td>
+        <td>0%</td>
         <td>2017-11-08</td>
+        <td>Render hurtboxes on top of mesh</td>
         <td>image</td>
       </tr>
       <tr>
         <td>0%</td>
-        <td>Render hitboxes</td>
+        <td>0%</td>
         <td>2017-11-15</td>
+        <td>Render hitboxes</td>
         <td>image</td>
       </tr>
       <tr>
         <td>0%</td>
-        <td>Allow creation of hurtboxes that are interpolated between frames</td>
+        <td>0%</td>
         <td>2017-11-20</td>
+        <td>Allow creation of hurtboxes that are interpolated between frames</td>
         <td>link to video or something</td>
       </tr>
       <tr>
         <td>0%</td>
-        <td>Allow creation of hitboxes that are interpolated between frames</td>
+        <td>0%</td>
         <td>2017-11-25</td>
+        <td>Allow creation of hitboxes that are interpolated between frames</td>
         <td>link to video or something</td>
       </tr>
     </table>
