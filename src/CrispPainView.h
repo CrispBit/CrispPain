@@ -1,3 +1,6 @@
+#ifndef CRISPPAINVIEW_H
+#define CRISPPAINVIEW_H
+
 #include <SFML/Graphics.hpp>
 #include <QWidget>
 #include "QSFMLCanvas.h"
@@ -16,3 +19,5 @@ private:
     void onInit() override;
     void onUpdate() override;
 };
+
+#endif // CRISPPAINVIEW_H
