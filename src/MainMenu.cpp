@@ -32,11 +32,16 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
     setCentralWidget(cpview);
 
     QToolBar *toolbar = new QToolBar("toolbar");
-    toolbar->addAction("meems");
+    QAction *meems = toolbar->addAction("meems");
     this->addToolBar(Qt::RightToolBarArea, toolbar);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(meems, SIGNAL(triggered()), this, SLOT(meems()));
+}
+
+void MainMenu::meems() {
+    std::cout << "meems" << std::endl;
 }
 
 void MainMenu::open() {
