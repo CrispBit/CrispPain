@@ -64,3 +64,7 @@ void QSFMLCanvas::paintEvent(QPaintEvent*) {
     // Display on screen
     display();
 }
+
+void QSFMLCanvas::resizeEvent(QResizeEvent* event) {
+    setSize(sf::Vector2u(QWidget::width(), QWidget::height()));
+}

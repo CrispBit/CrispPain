@@ -18,6 +18,7 @@ private:
     virtual QPaintEngine *paintEngine() const;
     virtual void showEvent(QShowEvent *);
     virtual void paintEvent(QPaintEvent*);
+    void resizeEvent(QResizeEvent *event);
 
     QTimer myTimer;
     bool myInitialized;

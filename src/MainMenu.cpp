@@ -1,10 +1,13 @@
 #include "MainMenu.h"
+#include "CrispPainView.h"
 #include <QMenu>
 #include <QMenuBar>
 #include <QFileDialog>
+#include <QToolBar>
 #include <iostream>
 
 MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
+    // set up menu bar
     QPixmap newPix("new.png");
     QPixmap openPix("open.png");
     QPixmap quitPix("quit.png");
@@ -21,6 +24,16 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
     menuBar->addAction(quit);
 
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
+
+    // set up main view
+    cpview = new CrispPainView(this, QPoint(1, menuBar->height()),
+            QSize(10, 10));
+            //QSize(800 - 2 - 80, 500 - 1 - menuBar->height()));
+    setCentralWidget(cpview);
+
+    QToolBar *toolbar = new QToolBar("toolbar");
+    toolbar->addAction("meems");
+    this->addToolBar(Qt::RightToolBarArea, toolbar);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
