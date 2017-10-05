@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <cstdlib>
 #include "CrispPainView.h"
 
 void CrispPainView::onInit() {
@@ -6,5 +7,9 @@ void CrispPainView::onInit() {
 }
 
 void CrispPainView::onUpdate() {
-    clear(sf::Color(255, 0, 0, 255));
+    clear(color);
+}
+
+void CrispPainView::randomColor() {
+    color = sf::Color(rand());
 }

@@ -42,6 +42,7 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
 void MainMenu::meems() {
     std::cout << "meems" << std::endl;
+    cpview->randomColor();
 }
 
 void MainMenu::open() {

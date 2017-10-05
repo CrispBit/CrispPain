@@ -13,11 +13,13 @@ public:
         QSFMLCanvas(parent, position, size) {
         // construct the thingo
     }
+    void randomColor();
 
 private:
 
     void onInit() override;
     void onUpdate() override;
+    sf::Color color = sf::Color(255, 0, 0, 255);
 };
 
 #endif // CRISPPAINVIEW_H
