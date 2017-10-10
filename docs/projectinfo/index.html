@@ -27,15 +27,33 @@
           white-space: nowrap;
       }
 
-      img {
+      div.img {
+          position: relative;
+      }
+
+      div.img img:first-child {
           max-height: 100%;
           max-width: 100%;
       }
 
-      img:hover {
+      div.img img:last-child {
+          display: none;
+          position: absolute;
+          top: 0px;
+          right: 0px;
+      }
+
+      div.img:hover img:last-child {
+          display: inline
+      }
+
+      /*img:hover {
+          position: relative;
+          top: 0px;
+          right: 0px;
           max-height: none;
           max-width: none;
-      }
+      }*/
 
       .pl {
           background-color: red;
@@ -71,7 +89,7 @@
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window appears with a menu bar, side bar, and view in the middle that has the words "test" in white against a black background</td>
         <td rowspan="2"></td>
-        <td rowspan="2"><img src="test.png" /></td>
+        <td rowspan="2"><div class="img"><img src="test.png" /><img src="test.png" /></div></td>
       </tr>
       <tr class="sub">
         <td>Integration into CrispSynth</td>
