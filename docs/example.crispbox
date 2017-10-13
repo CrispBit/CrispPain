@@ -13,6 +13,10 @@ v0
 ; yOffset- y offset from bone, 16-bit float
 ; zOffset- z offset from bone, 16-bit float
 
+; frameId: boxid, type (capsule, ellipsoid, sphere),
+           rx, ry, x, y, z[, ...]
+
+
 ; more comments
 [ib] ; hItBox
 
@@ -26,7 +30,7 @@ v0
 ;                 reflectiveness (0 or 1),
 ;                 absorptiveness (0 or 1),
 ;                 blockability (0 or 1),
-;                 angle flipper (0 or 1),[, boxid, r, x, y, z...]
+;                 angle flipper (0 or 1)[, ...]
 0: 0, 1, 1, 1, 1, 20, .2, 2, 30%, slashing, 40, slash, 0, 0, 1, 1,
    1, 1, 2, 1, 3, 30, .4, 4, 20%,    punch, 50, punch, 0, 0, 1, 1
 1: 1, 1, 2, 1, 3, 30, .4, 4, 20%,    punch, 50, punch, 0, 0, 1, 1
