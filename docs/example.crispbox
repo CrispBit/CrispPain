@@ -2,12 +2,22 @@ v0
 ; ^ version
 ; comment
 [ub] ; hUrtBox
+; boneId: rx, ry, rz, xOffset, yOffset, zOffset
+0: 1, 2, 2, 0, 0, 0 ; arm1
+1: 2, 3, 3, 0, 1, 1 ; arm2
+
+; rx-      x radius,           16-bit float
+; ry-      y radius,           16-bit float
+; rz-      z radius,           16-bit float
+; xOffset- x offset from bone, 16-bit float
+; yOffset- y offset from bone, 16-bit float
+; zOffset- z offset from bone, 16-bit float
 
 ; more comments
 [ib] ; hItBox
 
 ; some numbers
-; frameId: boxid, r, x, y, z,
+; frameId: boxid, r, xOffset, yOffset, zOffset,
 ;                 damage (%), angle (radians),
 ;                 base knockback (ft), knockback scaling (%),
 ;                 effect (nothing, slashing, burning, electrocution, etc.),
@@ -21,5 +31,19 @@ v0
    1, 1, 2, 1, 3, 30, .4, 4, 20%,    punch, 50, punch, 0, 0, 1, 1
 1: 1, 1, 2, 1, 3, 30, .4, 4, 20%,    punch, 50, punch, 0, 0, 1, 1
 
-; TODO limits on number size?
-; THINGO IS THE BEST NONDESCRIPTOR
+; boxid-             id of hitbox,                                           8-bit integer
+; r-                 radius of hitbox,                                       16-bit integer
+; xOffset-           x offset from character center,                         16-bit integer
+; yOffset-           y offset from character center,                         16-bit integer
+; zOffset-           z offset from character center,                         16-bit integer
+; damage-            damage % hitbox applies to character,                   16-bit float
+; angle-             angle in radians hitbox sends character at,             16-bit float
+; base knockback-    base knockback in feet,                                 16-bit float
+; knockback scaling- % multiplied by character damage, determines knockback, 16-bit float
+; effect-            effect applied to character,                            char[20]
+; shield damage-     % damage done to shield relative to full size,          16-bit float
+; sound effect-      sound effect played,                                    string
+; reflectiveness-    whether or not the hitbox can be reflected (boolean),   8-bit integer
+; absorptiveness-    whether or not the hitbox can be absorbed (boolean),    8-bit integer
+; blockability-      whether or not the hitbox can be blocked (boolean),     8-bit integer
+; angle flipper-     whether or not the hitbox has a reverse hit (boolean),  8-bit integer
