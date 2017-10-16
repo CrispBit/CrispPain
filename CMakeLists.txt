@@ -34,12 +34,6 @@ if (OPENGL_FOUND)
     target_link_libraries(crisppain ${OPENGL_LIBRARIES})
 endif()
 
-find_package(GLEW)
-if (GLEW_FOUND)
-    include_directories(${GLEW_INCLUDE_DIRS})
-    target_link_libraries(crisppain ${GLEW_LIBRARIES})
-endif()
-
 find_package(ASSIMP)
 if (ASSIMP_FOUND)
     include_directories(${ASSIMP_INCLUDE_DIRS})
@@ -63,6 +57,9 @@ if (SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
     target_link_libraries(crisppain ${SFML_LIBRARIES})
 endif()
+
+include_directories(include)
+target_link_libraries(crisppain ${CMAKE_DL_LIBS})
 
 set(CRISPSYNTH_STATIC_LIBRARY TRUE)
 find_package(CrispSynth)
