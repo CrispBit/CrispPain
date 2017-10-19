@@ -1,9 +1,23 @@
+#include <crispsynth/OpenGL.h>
+
 #include <iostream>
-#include "glad/glad.h"
-#include <crispsynth/Locator.h>
+#include <chrono>
+#include <cstdlib>
+
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
-#include <cstdlib>
+
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <crispsynth/Locator.h>
+#include <crispsynth/resources/LocalResources.h>
+#include <crispsynth/mesh/MeshContainer.h>
+#include <crispsynth/mesh/MeshShaders.h>
+
 #include "CrispPainView.h"
 
 CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSize& size) :
@@ -13,18 +27,6 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
         text = std::make_unique<TextObject>("test", font);
 }
 
-const char *vtxShaderSource = "#version 130\n"
-    "in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-const char *frgtShaderSource = "#version 130\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
 void CrispPainView::onInit() {
     if (!gladLoadGL()) {
         std::cerr << "rip" << std::endl;
@@ -37,73 +39,61 @@ void CrispPainView::onInit() {
     std::cout << "antialiasing level:" << settings.antialiasingLevel << std::endl;
     std::cout << "version:" << settings.majorVersion << "." << settings.minorVersion << std::endl;
 
-    GLuint vtxshdr = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vtxshdr, 1, &vtxShaderSource, NULL);
-    glCompileShader(vtxshdr);
+    MeshShaders::init();
+    MeshShaders::currentProgram = &MeshShaders::bonedMeshShaderProgram;
+    glUseProgram(*MeshShaders::currentProgram);
 
-    GLint success;
-    GLchar infoLog[512];
-    glGetShaderiv(vtxshdr, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vtxshdr, 512, NULL, infoLog);
-        std::cout << "rip vertex shader: " << infoLog << std::endl;
-    }
+    t_start = std::chrono::high_resolution_clock::now();
 
-    GLuint frgtshdr = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(frgtshdr, 1, &frgtShaderSource, NULL);
-    glCompileShader(frgtshdr);
+    object = meshes.createBoned("bob", "boblampclean.md5mesh");
 
-    glGetShaderiv(frgtshdr, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(frgtshdr, 512, NULL, infoLog);
-        std::cout << "rip fragment shader: " << infoLog << std::endl;
-    }
+    uniTrans = glGetUniformLocation(*MeshShaders::currentProgram, "model");
+    t_now = std::chrono::high_resolution_clock::now();
 
-    GLuint shdrprgm = glCreateProgram();
-    glAttachShader(shdrprgm, vtxshdr);
-    glAttachShader(shdrprgm, frgtshdr);
-    glLinkProgram(shdrprgm);
+    view = glm::lookAt(
+            glm::vec3(4.0f, 4.0f, 4.0f),
+            glm::vec3(3.0f, 3.0f, 3.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+    view *= glm::scale(glm::vec3(.06f, .06f, .06f));
+    uniView = glGetUniformLocation(*MeshShaders::currentProgram, "view");
+    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
-    glGetShaderiv(shdrprgm, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(frgtshdr, 512, NULL, infoLog);
-        std::cout << "mfw linking failed: " << infoLog << std::endl;
-    }
-    glDeleteShader(vtxshdr);
-    glDeleteShader(frgtshdr);
+    proj = glm::perspective(glm::radians(lookDeg), 800.0f / 500.0f, 1.0f, 10.0f);
+    uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
+    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
-    GLfloat numbers[] = {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
-    };
-    GLuint indices[] = {
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
-    // mfw comments
-
-    GLuint VBO, EBO; // :)
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(numbers), numbers, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    GLint apos = glGetAttribLocation(shdrprgm, "aPos");
-    std::cout << apos << std::endl;
-    glVertexAttribPointer(apos, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), NULL);
-    glEnableVertexAttribArray(apos);
-    glUseProgram(shdrprgm);
+    glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
+    t_now = std::chrono::high_resolution_clock::now();
 }
 
+
 void CrispPainView::onUpdate() {
+    t_start = t_now;
+    t_now = std::chrono::high_resolution_clock::now();
     glViewport(0, 0, getSize().x, getSize().y);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    trans = glm::rotate(
+            trans,
+            //time * glm::radians(2.0f),
+            glm::radians(.1f),
+            glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
+    std::vector<glm::mat4> Transforms;
+    object->boneTransform(clock.getElapsedTime().asSeconds(), Transforms);
+    for (unsigned int i = 0; i < Transforms.size(); ++i) {
+        const std::string name = "gBones[" + std::to_string(i) + "]"; // every transform is for a different bone
+        GLint boneTransform = glGetUniformLocation(MeshShaders::bonedMeshShaderProgram, name.c_str());
+        Transforms[i] = glm::transpose(Transforms[i]);
+        glUniformMatrix4fv(boneTransform, 1, GL_TRUE, glm::value_ptr(Transforms[i]));
+    }
+
+    object->draw();
+
+    //sf::RenderWindow::pushGLStates();
     //text->render(*pain, 0);
+    //sf::RenderWindow::popGLStates();
 }
