@@ -63,8 +63,8 @@ void CrispPainView::onInit() {
     uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
-    glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
-    t_now = std::chrono::high_resolution_clock::now();
+    glClearColor(0.3f, 0.5f, 0.8f, 1.0f);/*
+    t_now = std::chrono::high_resolution_clock::now();*/
 }
 
 
@@ -73,6 +73,8 @@ void CrispPainView::onUpdate() {
     t_now = std::chrono::high_resolution_clock::now();
     glViewport(0, 0, getSize().x, getSize().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glUseProgram(*MeshShaders::currentProgram);
 
     trans = glm::rotate(
             trans,
@@ -92,8 +94,14 @@ void CrispPainView::onUpdate() {
     }
 
     object->draw();
+    sf::RenderWindow::pushGLStates();
+    text->render(*pain, 0);
+    sf::RenderWindow::popGLStates();
 
-    //sf::RenderWindow::pushGLStates();
-    //text->render(*pain, 0);
-    //sf::RenderWindow::popGLStates();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
 }
