@@ -47,13 +47,6 @@
           display: inline;
           z-index: 1;
       }
-
-      .pl {
-          background-color: red;
-      }
-      .todo {
-          background-color: yellow;
-      }
     </style>
   </head>
   <body>
@@ -112,7 +105,13 @@
         <td>Print values relating to mesh's geometry</td>
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
-        <td rowspan="2">A console log which shows the first five vertices of the mesh</td>
+        <td rowspan="2">A console log which shows the information about the first five meshes of the model, which should be<br/>
+            <span style="font-family: monospace">
+                {numIndices = 1884, materialIndex = 0, baseVertex = 0, baseIndex = 0},<br/>
+                {numIndices = 531, materialIndex = 1, baseVertex = 494, baseIndex = 1884},<br/>
+                {numIndices = 234, materialIndex = 2, baseVertex = 596, baseIndex = 2415},<br/>
+                {numIndices = 48, materialIndex = 3, baseVertex = 654, baseIndex = 2649},<br/>
+                {numIndices = 66, materialIndex = 4, baseVertex = 672, baseIndex = 2697}</span></td>
         <td rowspan="2"></td>
         <td rowspan="2"><div class="img"><img src="meems.png"/><img src="meems.png"/></div></td>
       </tr>
