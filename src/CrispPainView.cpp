@@ -18,6 +18,8 @@
 #include <crispsynth/mesh/MeshContainer.h>
 #include <crispsynth/mesh/MeshShaders.h>
 
+#include "CapsuleShader.h"
+
 #include "CrispPainView.h"
 
 CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSize& size) :
@@ -25,6 +27,7 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
         pain = std::make_unique<Pain>(*this);
         font = Locator::getResource()->loadFont("Boogaloo-Regular.ttf");
         text = std::make_unique<TextObject>("test", font);
+        text->updatePosition(320, 170);
 }
 
 void CrispPainView::onInit() {
@@ -40,6 +43,7 @@ void CrispPainView::onInit() {
     std::cout << "version:" << settings.majorVersion << "." << settings.minorVersion << std::endl;
 
     MeshShaders::init();
+    CapsuleShader::init();
     MeshShaders::currentProgram = &MeshShaders::bonedMeshShaderProgram;
     glUseProgram(*MeshShaders::currentProgram);
 
@@ -63,8 +67,8 @@ void CrispPainView::onInit() {
     uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
-    glClearColor(0.3f, 0.5f, 0.8f, 1.0f);/*
-    t_now = std::chrono::high_resolution_clock::now();*/
+    glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
+    /*t_now = std::chrono::high_resolution_clock::now();*/
 }
 
 
