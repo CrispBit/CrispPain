@@ -5,6 +5,17 @@
 GLuint CapsuleShader::program;
 GLuint CapsuleShader::VAO;
 
+GLint CapsuleShader::uniAspect;
+GLint CapsuleShader::uniCapsuleColor;
+GLint CapsuleShader::uniRadius;
+GLint CapsuleShader::uniHeight;
+GLint CapsuleShader::uniViewMatrix;
+GLint CapsuleShader::uniInvViewMatrix;
+GLint CapsuleShader::uniInvModelMatrix;
+GLint CapsuleShader::uniProjectionMatrix;
+GLint CapsuleShader::uniFov;
+GLint CapsuleShader::uniResolution;
+
 const char *vecshader =
 "#version 130\n"
 "in vec2 pos;\n"
@@ -16,12 +27,13 @@ const char *fancyshader =
 "#version 130\n"
 "\n"
 "uniform float aspect;\n"
-"uniform vec4 icolor;\n"
+"uniform vec4 capsuleColor;\n"
 "uniform float radius;\n"
 "uniform float height;\n"
-"uniform mat4 cmat;\n"
-"uniform mat4 invcmat;\n"
-"uniform mat4 projmat;\n"
+"uniform mat4 viewMatrix;\n"
+"uniform mat4 invViewMatrix;\n"
+"uniform mat4 invModelMatrix;\n"
+"uniform mat4 projectionMatrix;\n"
 "uniform float fov;\n"
 "uniform vec2 resolution;\n"
 //"uniform vec4 ambient;\n"
@@ -38,52 +50,6 @@ const char *fancyshader =
 //"    float diffuse = max(dot(-da_sun, normal), 0.0);\n"
 //"    return color * (ambient + diffuse);\n"
 //"}\n"
-//"\n"
-"mat4 inverse(mat4 m) {\n"
-"  float\n"
-"      a00 = m[0][0], a01 = m[0][1], a02 = m[0][2], a03 = m[0][3],\n"
-"      a10 = m[1][0], a11 = m[1][1], a12 = m[1][2], a13 = m[1][3],\n"
-"      a20 = m[2][0], a21 = m[2][1], a22 = m[2][2], a23 = m[2][3],\n"
-"      a30 = m[3][0], a31 = m[3][1], a32 = m[3][2], a33 = m[3][3],\n"
-"\n"
-"      b00 = a00 * a11 - a01 * a10,\n"
-"      b01 = a00 * a12 - a02 * a10,\n"
-"      b02 = a00 * a13 - a03 * a10,\n"
-"      b03 = a01 * a12 - a02 * a11,\n"
-"      b04 = a01 * a13 - a03 * a11,\n"
-"      b05 = a02 * a13 - a03 * a12,\n"
-"      b06 = a20 * a31 - a21 * a30,\n"
-"      b07 = a20 * a32 - a22 * a30,\n"
-"      b08 = a20 * a33 - a23 * a30,\n"
-"      b09 = a21 * a32 - a22 * a31,\n"
-"      b10 = a21 * a33 - a23 * a31,\n"
-"      b11 = a22 * a33 - a23 * a32,\n"
-"\n"
-"      det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;\n"
-"\n"
-"  return mat4(\n"
-"      a11 * b11 - a12 * b10 + a13 * b09,\n"
-"      a02 * b10 - a01 * b11 - a03 * b09,\n"
-"      a31 * b05 - a32 * b04 + a33 * b03,\n"
-"      a22 * b04 - a21 * b05 - a23 * b03,\n"
-"      a12 * b08 - a10 * b11 - a13 * b07,\n"
-"      a00 * b11 - a02 * b08 + a03 * b07,\n"
-"      a32 * b02 - a30 * b05 - a33 * b01,\n"
-"      a20 * b05 - a22 * b02 + a23 * b01,\n"
-"      a10 * b10 - a11 * b08 + a13 * b06,\n"
-"      a01 * b08 - a00 * b10 - a03 * b06,\n"
-"      a30 * b04 - a31 * b02 + a33 * b00,\n"
-"      a21 * b02 - a20 * b04 - a23 * b00,\n"
-"      a11 * b07 - a10 * b09 - a12 * b06,\n"
-"      a00 * b09 - a01 * b07 + a02 * b06,\n"
-"      a31 * b01 - a30 * b03 - a32 * b00,\n"
-"      a20 * b03 - a21 * b01 + a22 * b00) / det;\n"
-"}\n"
-"\n"
-"/*\n"
-" * these dont require the ray direction to be normalized,\n"
-" * thus allowing for transformations to be handled elsewhere\n"
-" */\n"
 "\n"
 //"bool sphere(in Ray ray, in float r, inout float d, inout vec3 normal) {\n"
 "bool sphere(in Ray ray, in float r, inout float d) {\n"
@@ -124,10 +90,9 @@ const char *fancyshader =
 "    return true;\n"
 "}\n"
 "\n"
-"void capsule(in Ray ray, in float r, in float h, in mat4 mat, in vec4 color,\n"
+"void capsule(in Ray ray, in float r, in float h, in mat4 invmat, in vec4 color,\n"
 "             inout vec4 fragColor, inout float depth) {\n"
 "\n"
-"    mat4 invmat = inverse(mat);\n"
 "    Ray newray = Ray(vec3(invmat * vec4(ray.pos, 1.0)), mat3(invmat) * ray.dir);\n"
 "    float d = depth, ds1, ds2;\n"
 //"    vec3 n, ns1, ns2;\n"
@@ -152,7 +117,7 @@ const char *fancyshader =
 //"        fragColor = lighting(color, n);\n"
 "        fragColor = color;\n"
 "        depth = d;\n"
-"        vec4 clip = projmat * cmat * vec4(ray.pos + ray.dir * d, 1.0);\n"
+"        vec4 clip = projectionMatrix * viewMatrix * vec4(ray.pos + ray.dir * d, 1.0);\n"
 "        float ndc_depth = clip.z / clip.w;\n"
 "        gl_FragDepth = ndc_depth / 2.0 + 0.5;\n"
 "    } else {\n"
@@ -161,13 +126,11 @@ const char *fancyshader =
 "\n"
 "vec4 calculateColor(Ray ray) {\n"
 "    float depth = 999.0;\n"
-"    vec4 color = vec4(0.0, 0.0, 0.0, 0.0);\n"
-"    vec4 red = vec4(1.0, 0.0, 0.0, 1.0);\n"
-"    vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);\n"
+"    vec4 currentColor = vec4(0.0, 0.0, 0.0, 0.0);\n"
 "\n"
-"    capsule(ray, 0.3, 2.0, mat4(1.0), icolor, color, depth);\n"
+"    capsule(ray, radius, height, invModelMatrix, capsuleColor, currentColor, depth);\n"
 "\n"
-"    return color;\n"
+"    return currentColor;\n"
 "}\n"
 "\n"
 "void main()\n"
@@ -177,8 +140,8 @@ const char *fancyshader =
 "    vec2 xy = gl_FragCoord.xy / resolution * 2.0 - 1.0;\n"
 "    xy.x *= aspect;\n"
 "    float d = (aspect/2.0)/tan(radians(fov/2.0));\n"
-"    vec3 raydir = mat3(invcmat) * vec3(xy, -d);\n"
-"    Ray ray = Ray(invcmat[3].xyz, normalize(raydir));\n"
+"    vec3 raydir = mat3(invViewMatrix) * vec3(xy, -d);\n"
+"    Ray ray = Ray(invViewMatrix[3].xyz, normalize(raydir));\n"
 "    gl_FragColor = calculateColor(ray);\n"
 "}";
 
@@ -245,4 +208,15 @@ void CapsuleShader::init() {
       glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (const GLvoid*) 0);
 
     glBindVertexArray(0);
+
+    uniAspect = glGetUniformLocation(program, "aspect");
+    uniCapsuleColor = glGetUniformLocation(program, "capsuleColor");
+    uniRadius = glGetUniformLocation(program, "radius");
+    uniHeight = glGetUniformLocation(program, "height");
+    uniViewMatrix = glGetUniformLocation(program, "viewMatrix");
+    uniInvViewMatrix = glGetUniformLocation(program, "invViewMatrix");
+    uniInvModelMatrix = glGetUniformLocation(program, "invModelMatrix");
+    uniProjectionMatrix = glGetUniformLocation(program, "projectionMatrix");
+    uniFov = glGetUniformLocation(program, "fov");
+    uniResolution = glGetUniformLocation(program, "resolution");
 }

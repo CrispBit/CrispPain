@@ -19,7 +19,7 @@ private:
 
     void onInit() override;
     void onUpdate() override;
-    void drawCapsule(glm::vec4 color);
+    void drawCapsule(float radius, float height, glm::vec4 color, glm::mat4 modelMatrix);
     sf::Color color = sf::Color(255, 0, 0, 255);
     std::unique_ptr<Pain> pain;
     std::unique_ptr<TextObject> text;

@@ -24,25 +24,27 @@
 
 #include <glm/ext.hpp>
 
-glm::vec3 eye = glm::vec3(4.0f, 4.0f, 4.0f);
-glm::vec3 center = glm::vec3(3.0f, 3.0f, 3.0f);
+glm::vec3 eye = glm::vec3(100.0f, 100.0f, 100.0f);
+glm::vec3 center = glm::vec3(0.0f, 30.0f, 0.0f);
 
-void CrispPainView::drawCapsule(glm::vec4 color) {
+void CrispPainView::drawCapsule(float radius, float height, glm::vec4 color, glm::mat4 modelMatrix) {
+
     sf::Vector2f resolution(getSize());
+
     glBindVertexArray(CapsuleShader::VAO);
-    glUniform1f(glGetUniformLocation(CapsuleShader::program, "aspect"), resolution.x / resolution.y);
-    glUniform1f(glGetUniformLocation(CapsuleShader::program, "fov"),    lookDeg);
-    glUniform4fv(glGetUniformLocation(CapsuleShader::program, "icolor"), 1, glm::value_ptr(color));
-    glUniform2f(glGetUniformLocation(CapsuleShader::program, "resolution"), resolution.x, resolution.y);
+      glUniform1f(CapsuleShader::uniAspect, resolution.x / resolution.y);
+      glUniform1f(CapsuleShader::uniFov, lookDeg);
+      glUniform1f(CapsuleShader::uniHeight, height);
+      glUniform1f(CapsuleShader::uniRadius, radius);
+      glUniform2f(CapsuleShader::uniResolution, resolution.x, resolution.y);
+      glUniform4fv(CapsuleShader::uniCapsuleColor, 1, glm::value_ptr(color));
 
-    glUniformMatrix4fv(glGetUniformLocation(CapsuleShader::program, "invcmat"), 1, GL_FALSE, glm::value_ptr(glm::inverse(view)));
-    glUniformMatrix4fv(glGetUniformLocation(CapsuleShader::program, "cmat"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(glGetUniformLocation(CapsuleShader::program, "projmat"), 1, GL_FALSE, glm::value_ptr(proj));
-    //glm::vec3 lel = center - eye;
-    //glUniform3fv(glGetUniformLocation(CapsuleShader::program, "campos"), 1, glm::value_ptr(eye));
-    //glUniform3fv(glGetUniformLocation(CapsuleShader::program, "camdir"), 1, glm::value_ptr(lel));
+      glUniformMatrix4fv(CapsuleShader::uniInvModelMatrix, 1, GL_FALSE, glm::value_ptr(glm::inverse(modelMatrix)));
+      glUniformMatrix4fv(CapsuleShader::uniInvViewMatrix, 1, GL_FALSE, glm::value_ptr(glm::inverse(view)));
+      glUniformMatrix4fv(CapsuleShader::uniViewMatrix, 1, GL_FALSE, glm::value_ptr(view));
+      glUniformMatrix4fv(CapsuleShader::uniProjectionMatrix, 1, GL_FALSE, glm::value_ptr(proj));
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+      glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 }
 
@@ -86,7 +88,8 @@ void CrispPainView::onInit() {
     uniView = glGetUniformLocation(*MeshShaders::currentProgram, "view");
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
-    proj = glm::perspective(glm::radians(lookDeg), 800.0f / 500.0f, 1.0f, 10.0f);
+    sf::Vector2f resolution(getSize());
+    proj = glm::perspective(glm::radians(lookDeg), resolution.x / resolution.y, 1.0f, 1000.0f);
     uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
@@ -109,8 +112,7 @@ void CrispPainView::onUpdate() {
             glm::radians(.1f),
             glm::vec3(0.0f, 1.0f, 0.0f)
     );
-    glm::mat4 wtfabeyudodis = glm::scale(glm::vec3(.02f, .02f, .02f)) * trans;
-    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(wtfabeyudodis));
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 
     std::vector<glm::mat4> Transforms;
     object->boneTransform(clock.getElapsedTime().asSeconds(), Transforms);
@@ -125,7 +127,7 @@ void CrispPainView::onUpdate() {
 
     glUseProgram(CapsuleShader::program);
 
-    drawCapsule(glm::vec4(1.0, 0.0, 0.0, 0.5));
+    drawCapsule(10.0f, 100.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f), glm::translate(trans, glm::vec3(0.0f, 40.0f, 0.0f)));
 
     sf::RenderWindow::pushGLStates();
     text->render(*pain, 0);
