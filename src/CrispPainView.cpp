@@ -22,6 +22,30 @@
 
 #include "CrispPainView.h"
 
+#include <glm/ext.hpp>
+
+glm::vec3 eye = glm::vec3(4.0f, 4.0f, 4.0f);
+glm::vec3 center = glm::vec3(3.0f, 3.0f, 3.0f);
+
+void CrispPainView::drawCapsule(glm::vec4 color) {
+    sf::Vector2f resolution(getSize());
+    glBindVertexArray(CapsuleShader::VAO);
+    glUniform1f(glGetUniformLocation(CapsuleShader::program, "aspect"), resolution.x / resolution.y);
+    glUniform1f(glGetUniformLocation(CapsuleShader::program, "fov"),    lookDeg);
+    glUniform4fv(glGetUniformLocation(CapsuleShader::program, "icolor"), 1, glm::value_ptr(color));
+    glUniform2f(glGetUniformLocation(CapsuleShader::program, "resolution"), resolution.x, resolution.y);
+
+    glUniformMatrix4fv(glGetUniformLocation(CapsuleShader::program, "invcmat"), 1, GL_FALSE, glm::value_ptr(glm::inverse(view)));
+    glUniformMatrix4fv(glGetUniformLocation(CapsuleShader::program, "cmat"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(CapsuleShader::program, "projmat"), 1, GL_FALSE, glm::value_ptr(proj));
+    //glm::vec3 lel = center - eye;
+    //glUniform3fv(glGetUniformLocation(CapsuleShader::program, "campos"), 1, glm::value_ptr(eye));
+    //glUniform3fv(glGetUniformLocation(CapsuleShader::program, "camdir"), 1, glm::value_ptr(lel));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+}
+
 CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSize& size) :
     QSFMLCanvas(parent, position, size) {
         pain = std::make_unique<Pain>(*this);
@@ -55,11 +79,10 @@ void CrispPainView::onInit() {
     t_now = std::chrono::high_resolution_clock::now();
 
     view = glm::lookAt(
-            glm::vec3(4.0f, 4.0f, 4.0f),
-            glm::vec3(3.0f, 3.0f, 3.0f),
+            eye,
+            center,
             glm::vec3(0.0f, 1.0f, 0.0f)
     );
-    view *= glm::scale(glm::vec3(.06f, .06f, .06f));
     uniView = glGetUniformLocation(*MeshShaders::currentProgram, "view");
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
@@ -86,7 +109,8 @@ void CrispPainView::onUpdate() {
             glm::radians(.1f),
             glm::vec3(0.0f, 1.0f, 0.0f)
     );
-    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+    glm::mat4 wtfabeyudodis = glm::scale(glm::vec3(.02f, .02f, .02f)) * trans;
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(wtfabeyudodis));
 
     std::vector<glm::mat4> Transforms;
     object->boneTransform(clock.getElapsedTime().asSeconds(), Transforms);
@@ -98,6 +122,11 @@ void CrispPainView::onUpdate() {
     }
 
     object->draw();
+
+    glUseProgram(CapsuleShader::program);
+
+    drawCapsule(glm::vec4(1.0, 0.0, 0.0, 0.5));
+
     sf::RenderWindow::pushGLStates();
     text->render(*pain, 0);
     sf::RenderWindow::popGLStates();

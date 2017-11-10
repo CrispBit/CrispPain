@@ -19,6 +19,7 @@ private:
 
     void onInit() override;
     void onUpdate() override;
+    void drawCapsule(glm::vec4 color);
     sf::Color color = sf::Color(255, 0, 0, 255);
     std::unique_ptr<Pain> pain;
     std::unique_ptr<TextObject> text;
@@ -39,7 +40,7 @@ private:
     GLint uniTrans;
     GLint uniView;
 
-    float lookDeg = 100;
+    float lookDeg = 50;
 };
 
 #endif // CRISPPAINVIEW_H

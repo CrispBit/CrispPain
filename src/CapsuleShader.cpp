@@ -3,26 +3,26 @@
 #include <iostream>
 
 GLuint CapsuleShader::program;
+GLuint CapsuleShader::VAO;
 
 const char *vecshader =
 "#version 130\n"
-"in vec3 pos;\n"
+"in vec2 pos;\n"
 "void main() {\n"
-"    gl_Position = vec4(pos, 1.0);\n"
+"    gl_Position = vec4(pos, -1.0, 1.0);\n"
 "}";
 
 const char *fancyshader =
 "#version 130\n"
 "\n"
 "uniform float aspect;\n"
-"uniform vec4 color;\n"
+"uniform vec4 icolor;\n"
 "uniform float radius;\n"
 "uniform float height;\n"
-//"uniform vec3 campos;\n"
-//"uniform vec3 camdir;\n"
 "uniform mat4 cmat;\n"
+"uniform mat4 invcmat;\n"
+"uniform mat4 projmat;\n"
 "uniform float fov;\n"
-"uniform vec4 skie;\n"
 "uniform vec2 resolution;\n"
 //"uniform vec4 ambient;\n"
 "\n"
@@ -152,16 +152,20 @@ const char *fancyshader =
 //"        fragColor = lighting(color, n);\n"
 "        fragColor = color;\n"
 "        depth = d;\n"
+"        vec4 clip = projmat * cmat * vec4(ray.pos + ray.dir * d, 1.0);\n"
+"        float ndc_depth = clip.z / clip.w;\n"
+"        gl_FragDepth = ndc_depth / 2.0 + 0.5;\n"
+"    } else {\n"
 "    }\n"
 "}\n"
 "\n"
 "vec4 calculateColor(Ray ray) {\n"
 "    float depth = 999.0;\n"
-"    vec4 color = skie;\n"
+"    vec4 color = vec4(0.0, 0.0, 0.0, 0.0);\n"
 "    vec4 red = vec4(1.0, 0.0, 0.0, 1.0);\n"
 "    vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);\n"
 "\n"
-"    capsule(ray, 1.0, 1.0, mat4(1.0), red, color, depth);\n"
+"    capsule(ray, 0.3, 2.0, mat4(1.0), icolor, color, depth);\n"
 "\n"
 "    return color;\n"
 "}\n"
@@ -169,20 +173,12 @@ const char *fancyshader =
 "void main()\n"
 "{\n"
 //"    da_sun = normalize(da_sun);\n"
-"    vec2 xy = gl_FragCoord.xy / resolution.xy * 2.0 - 1.0;\n"
+"    gl_FragDepth = gl_FragCoord.z;\n"
+"    vec2 xy = gl_FragCoord.xy / resolution * 2.0 - 1.0;\n"
 "    xy.x *= aspect;\n"
 "    float d = (aspect/2.0)/tan(radians(fov/2.0));\n"
-//"    camdir = normalize(camdir);\n"
-"\n"
-//"    vec3 z = camdir;\n"
-//"    vec3 x = normalize(cross(vec3(0.0, 1.0, 0.0), z));\n"
-//"    vec3 y = cross(z, x);\n"
-//"    mat4 cmat = mat4(x, 0.0,\n"
-//"                     y, 0.0,\n"
-//"                     z, 0.0,\n"
-//"                     0.0, 0.0, 0.0, 1.0);\n"
-"    vec3 raydir = mat3(cmat) * vec3(xy, d);\n"
-"    Ray ray = Ray(cmat[3].xyz, normalize(raydir));\n"
+"    vec3 raydir = mat3(invcmat) * vec3(xy, -d);\n"
+"    Ray ray = Ray(invcmat[3].xyz, normalize(raydir));\n"
 "    gl_FragColor = calculateColor(ray);\n"
 "}";
 
@@ -223,4 +219,30 @@ void CapsuleShader::init() {
 
     glDeleteShader(vtx);
     glDeleteShader(frag);
+
+    glUseProgram(program);
+
+    GLfloat vertices[] = {
+        -1.0f, -1.0f,
+         1.0f, -1.0f,
+         1.0f,  1.0f,
+
+         -1.0f, -1.0f,
+          1.0f,  1.0f,
+         -1.0f,  1.0f
+    };
+
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
+
+      GLuint vertex_buffer;
+      glGenBuffers(1, &vertex_buffer);
+      glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+
+      glEnableVertexAttribArray(0);
+      glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (const GLvoid*) 0);
+
+    glBindVertexArray(0);
 }

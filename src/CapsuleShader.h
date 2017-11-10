@@ -7,6 +7,7 @@ class CapsuleShader {
   public:
     static GLuint program;
     static void init();
+    static GLuint VAO;
 };
 
 #endif // HIRTBOXSHADER_H
