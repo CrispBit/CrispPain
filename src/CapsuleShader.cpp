@@ -136,7 +136,7 @@ const char *fancyshader =
 "void main()\n"
 "{\n"
 //"    da_sun = normalize(da_sun);\n"
-"    gl_FragDepth = gl_FragCoord.z;\n"
+"    gl_FragDepth = 1.0;\n"
 "    vec2 xy = gl_FragCoord.xy / resolution * 2.0 - 1.0;\n"
 "    xy.x *= aspect;\n"
 "    float d = (aspect/2.0)/tan(radians(fov/2.0));\n"
