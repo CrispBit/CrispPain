@@ -127,11 +127,17 @@ void CrispPainView::onUpdate() {
     object->draw();
 
     glUseProgram(CapsuleShader::program);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     std::vector<glm::mat4> let_me_test;
     object->its_unnecessary_overhead(clock.getElapsedTime().asSeconds(), let_me_test);
 
-    glm::mat4 capsuleMatrix = yabe * let_me_test[5];
+    for (auto thing : let_me_test) {
+        glm::mat4 matrix = yabe * thing;
+        drawCapsule(1.0f, 0.0, glm::vec4(1.0, 1.0, 0.0, 1.0), matrix);
+    }
+
+    /*glm::mat4 capsuleMatrix = yabe * let_me_test[5];
 
     // y axis
     drawCapsule(1.0f, 50.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), capsuleMatrix * glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
@@ -145,7 +151,7 @@ void CrispPainView::onUpdate() {
                                                                                           0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 10.1f)));
 
     drawCapsule(8.0f, 50.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f), capsuleMatrix);
-
+*/
     sf::RenderWindow::pushGLStates();
     text->render(*pain, 0);
     sf::RenderWindow::popGLStates();
