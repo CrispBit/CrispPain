@@ -88,11 +88,6 @@ void CrispPainView::onInit() {
     uniView = glGetUniformLocation(*MeshShaders::currentProgram, "view");
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
-    sf::Vector2f resolution(getSize());
-    proj = glm::perspective(glm::radians(lookDeg), resolution.x / resolution.y, 1.0f, 1000.0f);
-    uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
-    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
-
     glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
     /*t_now = std::chrono::high_resolution_clock::now();*/
 }
@@ -112,6 +107,11 @@ void CrispPainView::onUpdate() {
             glm::radians(.1f),
             glm::vec3(0.0f, 1.0f, 0.0f)
     );
+
+    sf::Vector2f resolution(getSize());
+    proj = glm::perspective(glm::radians(lookDeg), resolution.x / resolution.y, 10.0f, 500.0f);
+    uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
+    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
     glm::mat4 yabe = trans * glm::rotate(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(yabe));
