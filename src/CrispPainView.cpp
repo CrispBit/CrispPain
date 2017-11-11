@@ -121,28 +121,29 @@ void CrispPainView::onUpdate() {
     for (unsigned int i = 0; i < Transforms.size(); ++i) {
         const std::string name = "gBones[" + std::to_string(i) + "]"; // every transform is for a different bone
         GLint boneTransform = glGetUniformLocation(MeshShaders::bonedMeshShaderProgram, name.c_str());
-        Transforms[i] = glm::transpose(Transforms[i]);
-        glUniformMatrix4fv(boneTransform, 1, GL_TRUE, glm::value_ptr(Transforms[i]));
+        glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i]));
     }
-
-    //std::cout << Transforms.size() << std::endl;
 
     object->draw();
 
     glUseProgram(CapsuleShader::program);
 
-    //drawCapsule(10.0f, 100.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f), glm::translate(trans, glm::vec3(0.0f, 40.0f, 0.0f)));
-    glm::mat4 capsuleMatrix = yabe * glm::transpose(Transforms[5]) * glm::translate(glm::vec3(0.0f, 0.0f, 55.0f)) * glm::rotate(glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::translate(glm::vec3(0.0f, 3.0f, -40.0f));
+    std::vector<glm::mat4> let_me_test;
+    object->its_unnecessary_overhead(clock.getElapsedTime().asSeconds(), let_me_test);
+
+    glm::mat4 capsuleMatrix = yabe * let_me_test[5];
+
     // y axis
-    drawCapsule(1.0f, 20.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), capsuleMatrix * glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
+    drawCapsule(1.0f, 50.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), capsuleMatrix * glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
                                                                                           0.0f, 0.0f, 1.0f, 0.0f,
                                                                                           0.0f, 1.0f, 0.0f, 0.0f,
-                                                                                          0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 10.1f)));
+                                                                                          0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 25.1f)));
     // x axis
     drawCapsule(1.0f, 20.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), capsuleMatrix * glm::mat4(0.0f, 0.0f, 1.0f, 0.0f,
                                                                                           0.0f, 1.0f, 0.0f, 0.0f,
                                                                                           1.0f, 0.0f, 0.0f, 0.0f,
                                                                                           0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 10.1f)));
+
     drawCapsule(8.0f, 50.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f), capsuleMatrix);
 
     sf::RenderWindow::pushGLStates();
