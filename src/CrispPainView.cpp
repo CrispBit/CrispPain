@@ -121,7 +121,7 @@ void CrispPainView::onUpdate() {
     for (unsigned int i = 0; i < Transforms.size(); ++i) {
         const std::string name = "gBones[" + std::to_string(i) + "]"; // every transform is for a different bone
         GLint boneTransform = glGetUniformLocation(MeshShaders::bonedMeshShaderProgram, name.c_str());
-        glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i]));
+        glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i] * object->m_boneInfo[i].boneOffset));
     }
 
     object->draw();
@@ -129,10 +129,7 @@ void CrispPainView::onUpdate() {
     glUseProgram(CapsuleShader::program);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    std::vector<glm::mat4> let_me_test;
-    object->its_unnecessary_overhead(clock.getElapsedTime().asSeconds(), let_me_test);
-
-    for (auto thing : let_me_test) {
+    for (auto thing : Transforms) {
         glm::mat4 matrix = yabe * thing;
         drawCapsule(1.0f, 0.0, glm::vec4(1.0, 1.0, 0.0, 1.0), matrix);
     }
@@ -161,5 +158,7 @@ void CrispPainView::onUpdate() {
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    glFinish();
 
 }
