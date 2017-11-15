@@ -75,7 +75,7 @@ void CrispPainView::onInit() {
 
     t_start = std::chrono::high_resolution_clock::now();
 
-    object = meshes.createBoned("bob", "boblampclean.md5mesh");
+    object = meshes.createBoned("mfw", "crispbit.fbx");
 
     uniTrans = glGetUniformLocation(*MeshShaders::currentProgram, "model");
     t_now = std::chrono::high_resolution_clock::now();
@@ -90,6 +90,7 @@ void CrispPainView::onInit() {
 
     glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
     /*t_now = std::chrono::high_resolution_clock::now();*/
+
 }
 
 
@@ -108,12 +109,13 @@ void CrispPainView::onUpdate() {
             glm::vec3(0.0f, 1.0f, 0.0f)
     );
 
+    glm::mat4 yabe = glm::scale(glm::vec3(0.1)) * trans;
+
     sf::Vector2f resolution(getSize());
-    proj = glm::perspective(glm::radians(lookDeg), resolution.x / resolution.y, 10.0f, 500.0f);
+    proj = glm::perspective(glm::radians(lookDeg), resolution.x / resolution.y, 10.0f, 300.0f);
     uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
-    glm::mat4 yabe = trans * glm::rotate(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(yabe));
 
     std::vector<glm::mat4> Transforms;
@@ -127,28 +129,27 @@ void CrispPainView::onUpdate() {
     object->draw();
 
     glUseProgram(CapsuleShader::program);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_DEPTH_BUFFER_BIT);
 
     for (auto thing : Transforms) {
-        glm::mat4 matrix = yabe * thing;
-        drawCapsule(1.0f, 0.0, glm::vec4(1.0, 1.0, 0.0, 1.0), matrix);
+        glm::mat4 matrix = yabe * thing * glm::scale(glm::vec3(0.01)) *
+            glm::mat4(0, 0, 1, 0,
+                      1, 0, 0, 0,
+                      0, 1, 0, 0,
+                      0, 0, 0, 1) * glm::translate(glm::vec3(0, 0, 1.5));
+        drawCapsule(1.0f, 3.0f, glm::vec4(1.0f, 1.0f, 0.0f, 0.5f), matrix);
+        // y axis
+        drawCapsule(.1f, 3.0f, glm::vec4(0.0f, 1.0f, 0.0f, 0.3f), matrix * glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 1.5f)));
+        // x axis
+        drawCapsule(0.1f, 3.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), matrix * glm::mat4(0.0f, 0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 1.5f)));
     }
 
-    /*glm::mat4 capsuleMatrix = yabe * let_me_test[5];
-
-    // y axis
-    drawCapsule(1.0f, 50.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), capsuleMatrix * glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
-                                                                                          0.0f, 0.0f, 1.0f, 0.0f,
-                                                                                          0.0f, 1.0f, 0.0f, 0.0f,
-                                                                                          0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 25.1f)));
-    // x axis
-    drawCapsule(1.0f, 20.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), capsuleMatrix * glm::mat4(0.0f, 0.0f, 1.0f, 0.0f,
-                                                                                          0.0f, 1.0f, 0.0f, 0.0f,
-                                                                                          1.0f, 0.0f, 0.0f, 0.0f,
-                                                                                          0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 10.1f)));
-
-    drawCapsule(8.0f, 50.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f), capsuleMatrix);
-*/
     sf::RenderWindow::pushGLStates();
     text->render(*pain, 0);
     sf::RenderWindow::popGLStates();
@@ -158,7 +159,4 @@ void CrispPainView::onUpdate() {
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    glFinish();
-
 }
