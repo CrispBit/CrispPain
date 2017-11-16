@@ -90,7 +90,6 @@ void CrispPainView::onInit() {
 
     glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
     /*t_now = std::chrono::high_resolution_clock::now();*/
-
 }
 
 
@@ -119,17 +118,35 @@ void CrispPainView::onUpdate() {
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(yabe));
 
     std::vector<glm::mat4> Transforms;
-    object->boneTransform(clock.getElapsedTime().asSeconds(), Transforms);
+    float seconds = clock.getElapsedTime().asSeconds();
+    object->boneTransform(seconds, Transforms);
     for (unsigned int i = 0; i < Transforms.size(); ++i) {
         const std::string name = "gBones[" + std::to_string(i) + "]"; // every transform is for a different bone
         GLint boneTransform = glGetUniformLocation(MeshShaders::bonedMeshShaderProgram, name.c_str());
         glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i] * object->m_boneInfo[i].boneOffset));
+    }
+    uint16_t frame = seconds * object->m_pScene->mAnimations[1]->mTicksPerSecond;
+    while (frame >= object->m_pScene->mAnimations[1]->mDuration) {
+        frame -= object->m_pScene->mAnimations[1]->mDuration;
     }
 
     object->draw();
 
     glUseProgram(CapsuleShader::program);
     //glClear(GL_DEPTH_BUFFER_BIT);
+
+    switch (frame) {
+        case 45:
+        case 46:
+            drawCapsule(3.0f, 6.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::rotate(60.0f, glm::vec3(1, 0, 0)) * glm::translate(glm::vec3(3, -10, 10)));
+            break;
+        case 47:
+        case 48:
+        case 49:
+        case 50:
+            drawCapsule(3.0f, 6.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::rotate(60.0f, glm::vec3(1, 0, 0)) * glm::rotate(-.6f, glm::vec3(0, 1, 0)) * glm::translate(glm::vec3(10, -10, 15)));
+            break;
+    }
 
     for (auto thing : Transforms) {
         glm::mat4 matrix = yabe * thing * glm::scale(glm::vec3(0.01)) *
