@@ -2,8 +2,10 @@
 #include "CrispPainView.h"
 #include <QMenu>
 #include <QMenuBar>
+#include <QTimeLine>
 #include <QFileDialog>
 #include <QToolBar>
+#include <QLineEdit>
 #include <iostream>
 
 MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
@@ -33,7 +35,13 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
     QToolBar *toolbar = new QToolBar("toolbar");
     QAction *meems = toolbar->addAction("meems");
+
+    QToolBar *timeline = new QToolBar("timeline");
+    QLineEdit *currentFrameBox = new QLineEdit();
+    timeline->addWidget(currentFrameBox);
+
     this->addToolBar(Qt::RightToolBarArea, toolbar);
+    this->addToolBar(Qt::BottomToolBarArea, timeline);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
