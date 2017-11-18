@@ -3,6 +3,8 @@
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
+#include <algorithm>
+#include <cmath>
 
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
@@ -27,9 +29,50 @@
 glm::vec3 eye = glm::vec3(100.0f, 100.0f, 100.0f);
 glm::vec3 center = glm::vec3(0.0f, 30.0f, 0.0f);
 
+sf::FloatRect CrispPainView::capsuleBoundingBox(float capRadius, float capHeight, glm::mat4 modelMatrix) {
+
+    glm::vec4 boxVertices[8] = {
+        glm::vec4(capRadius, capRadius, capRadius + capHeight/2.0f, 1.0f),
+        glm::vec4(-capRadius, capRadius, capRadius + capHeight/2.0f, 1.0f),
+        glm::vec4(capRadius, -capRadius, capRadius + capHeight/2.0f, 1.0f),
+        glm::vec4(-capRadius, -capRadius, capRadius + capHeight/2.0f, 1.0f),
+
+        glm::vec4(capRadius, capRadius, -capRadius - capHeight/2.0f, 1.0f),
+        glm::vec4(-capRadius, capRadius, -capRadius - capHeight/2.0f, 1.0f),
+        glm::vec4(capRadius, -capRadius, -capRadius - capHeight/2.0f, 1.0f),
+        glm::vec4(-capRadius, -capRadius, -capRadius - capHeight/2.0f, 1.0f)
+    };
+    float ndc_top = -1.0f,
+       ndc_bottom = 1.0f,
+        ndc_right = -1.0f,
+         ndc_left = 1.0f;
+
+    for (glm::vec4 &vertex : boxVertices) {
+        vertex = proj * view * modelMatrix * vertex;
+        vertex.x /= vertex.w;
+        vertex.y /= vertex.w;
+        ndc_top = std::max(ndc_top, vertex.y);
+        ndc_bottom = std::min(ndc_bottom, vertex.y);
+        ndc_left = std::min(ndc_left, vertex.x);
+        ndc_right = std::max(ndc_right, vertex.x);
+    }
+
+    sf::Vector2f resolution(getSize());
+
+    float top = (-ndc_top + 1.0f) / 2.0f * resolution.y;
+    float left = (ndc_left + 1.0f) / 2.0f * resolution.x;
+    float width = (ndc_right - ndc_left) / 2.0f * resolution.x;
+    float height = (ndc_top - ndc_bottom) / 2.0f * resolution.y;
+
+    return sf::FloatRect(std::floor(left), std::floor(top), std::ceil(width), std::ceil(height));
+}
+
 void CrispPainView::drawCapsule(float radius, float height, glm::vec4 color, glm::mat4 modelMatrix) {
 
     sf::Vector2f resolution(getSize());
+
+    sf::FloatRect boundingBox = capsuleBoundingBox(radius, height, modelMatrix);
+    glScissor(boundingBox.left, resolution.y - boundingBox.top - boundingBox.height, boundingBox.width, boundingBox.height);
 
     glBindVertexArray(CapsuleShader::VAO);
       glUniform1f(CapsuleShader::uniAspect, resolution.x / resolution.y);
@@ -111,6 +154,10 @@ void CrispPainView::onUpdate() {
     glm::mat4 yabe = glm::scale(glm::vec3(0.1)) * trans;
 
     sf::Vector2f resolution(getSize());
+
+    // negate scaling effects caused by window resize
+    //setView(sf::View(sf::FloatRect(0, 0, resolution.x, resolution.y)));
+
     proj = glm::perspective(glm::radians(lookDeg), resolution.x / resolution.y, 10.0f, 300.0f);
     uniProj = glGetUniformLocation(*MeshShaders::currentProgram, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
@@ -148,6 +195,9 @@ void CrispPainView::onUpdate() {
             break;
     }
 
+    glEnable(GL_SCISSOR_TEST);
+
+    std::vector<sf::RectangleShape> rectangles;
     for (auto thing : Transforms) {
         glm::mat4 matrix = yabe * thing * glm::scale(glm::vec3(0.01)) *
             glm::mat4(0, 0, 1, 0,
@@ -165,10 +215,27 @@ void CrispPainView::onUpdate() {
                     0.0f, 1.0f, 0.0f, 0.0f,
                     1.0f, 0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f, 1.0f) * glm::translate(glm::vec3(0.0f, 0.0f, 1.5f)));
+
+        /* bounding box drawing for testing purposes
+        sf::FloatRect boundingBox = capsuleBoundingBox(1.0f, 3.0f, matrix);
+        sf::RectangleShape waows;
+        waows.setSize(sf::Vector2f(boundingBox.width, boundingBox.height));
+        waows.setPosition(boundingBox.left, boundingBox.top);
+        waows.setOutlineColor(sf::Color::Red);
+        waows.setOutlineThickness(2);
+        waows.setFillColor(sf::Color::Transparent);
+        rectangles.push_back(waows);*/
     }
+
+    glDisable(GL_SCISSOR_TEST);
 
     sf::RenderWindow::pushGLStates();
     text->render(*pain, 0);
+    /* bounding box drawing for testing purposes
+    for (sf::RectangleShape rectangle : rectangles) {
+        sf::RenderWindow::draw(rectangle);
+    }
+    */
     sf::RenderWindow::popGLStates();
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
