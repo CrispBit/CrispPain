@@ -14,7 +14,7 @@ v0
 ; zOffset- z offset from bone, 16-bit float
 
 ; frameId: boxid, type (capsule, ellipsoid, sphere),
-           rx, ry, x, y, z[, ...]
+           r, sx, sy, sz, x, y, z[, ...]
 
 
 ; more comments
