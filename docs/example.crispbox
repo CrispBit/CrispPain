@@ -2,8 +2,8 @@ v0
 ; ^ version
 ; comment
 [ub] ; hUrtBox
-; boneId: rx, ry, rz, xOffset, yOffset, zOffset
-0: 1, 2, 2, 0, 0, 0 ; arm1
+; boneId: r, sx, sy, sz, xOffset, yOffset, zOffset
+0: 1, 2, 3, 2, 0, 0, 0 ; arm1
 1: 2, 3, 3, 0, 1, 1 ; arm2
 
 ; rx-      x radius,           16-bit float
