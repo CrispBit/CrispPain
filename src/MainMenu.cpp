@@ -45,7 +45,7 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainMenu::addHurtbox() {
-    std::cout << "meems" << std::endl;
+    cpview->createHurtbox();
 }
 
 void MainMenu::open() {

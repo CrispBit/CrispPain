@@ -15,6 +15,7 @@ class CrispPainView : public QSFMLCanvas {
 public:
 
     CrispPainView(QWidget *parent, const QPoint& position, const QSize& size);
+    void createHurtbox();
 
 private:
 

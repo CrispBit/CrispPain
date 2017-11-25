@@ -247,3 +247,7 @@ void CrispPainView::onUpdate() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void CrispPainView::createHurtbox() {
+    std::cout << "lol" << std::endl;
+}
