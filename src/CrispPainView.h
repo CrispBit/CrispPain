@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <QWidget>
 #include <crispsynth/game-objects/TextObject.h>
+#include <crispsynth/game-objects/BoxCollection.h>
 #include <crispsynth/mesh/MeshContainer.h>
 #include "QSFMLCanvas.h"
 #include "Pain.h"
@@ -32,6 +33,8 @@ private:
     BonedMesh* object;
     sf::Clock clock;
     MeshContainer meshes;
+
+    BoxCollection boxCollection;
 
     glm::mat4 view;
     glm::mat4 proj;
