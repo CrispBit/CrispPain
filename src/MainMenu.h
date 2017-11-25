@@ -13,7 +13,7 @@ public:
     CrispPainView *cpview;
 public slots:
     void open();
-    void meems();
+    void addHurtbox();
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 #include "CrispPainView.h"
+#include <crispsynth/Locator.h>
 #include <QMenu>
 #include <QMenuBar>
 #include <QTimeLine>
@@ -34,21 +35,16 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
     setCentralWidget(cpview);
 
     QToolBar *toolbar = new QToolBar("toolbar");
-    QAction *meems = toolbar->addAction("meems");
-
-    QToolBar *timeline = new QToolBar("timeline");
-    QLineEdit *currentFrameBox = new QLineEdit();
-    timeline->addWidget(currentFrameBox);
+    QAction *addHurtbox = toolbar->addAction(QIcon((Locator::rootPath / "assets/images/add-hurtbox.png").c_str()), "add hurtbox");
 
     this->addToolBar(Qt::RightToolBarArea, toolbar);
-    this->addToolBar(Qt::BottomToolBarArea, timeline);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(meems, SIGNAL(triggered()), this, SLOT(meems()));
+    connect(addHurtbox, SIGNAL(triggered()), this, SLOT(addHurtbox()));
 }
 
-void MainMenu::meems() {
+void MainMenu::addHurtbox() {
     std::cout << "meems" << std::endl;
 }
 
