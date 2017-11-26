@@ -23,6 +23,7 @@ private:
     void onUpdate() override;
     sf::FloatRect capsuleBoundingBox(float radius, float height, glm::mat4 modelMatrix);
     void drawCapsule(float radius, float height, glm::vec4 color, glm::mat4 modelMatrix);
+    void updateHurtboxPanel();
     sf::Color color = sf::Color(255, 0, 0, 255);
     std::unique_ptr<Pain> pain;
     std::unique_ptr<TextObject> text;

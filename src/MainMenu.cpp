@@ -28,16 +28,21 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
     qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
 
+    QToolBar *toolbar = new QToolBar("toolbar");
+    QToolBar *propertiesPane = new QToolBar("properties");
+    QAction *addHurtbox = toolbar->addAction(QIcon((Locator::rootPath / "assets/images/add-hurtbox.png").c_str()), "add hurtbox");
+    hurtboxTable = new QTableWidget(propertiesPane);
+
+    this->addToolBar(Qt::RightToolBarArea, toolbar);
+    this->addToolBar(Qt::BottomToolBarArea, propertiesPane);
+    propertiesPane->addWidget(hurtboxTable);
+
     // set up main view
     cpview = new CrispPainView(this, QPoint(1, menuBar->height()),
             QSize(10, 10));
             //QSize(800 - 2 - 80, 500 - 1 - menuBar->height()));
     setCentralWidget(cpview);
 
-    QToolBar *toolbar = new QToolBar("toolbar");
-    QAction *addHurtbox = toolbar->addAction(QIcon((Locator::rootPath / "assets/images/add-hurtbox.png").c_str()), "add hurtbox");
-
-    this->addToolBar(Qt::RightToolBarArea, toolbar);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));

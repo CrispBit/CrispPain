@@ -99,6 +99,10 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
         //text->updatePosition(320, 170);
 }
 
+void CrispPainView::updateHurtboxPanel() {
+
+}
+
 void CrispPainView::onInit() {
     if (!gladLoadGL()) {
         std::cerr << "rip" << std::endl;
@@ -117,6 +121,7 @@ void CrispPainView::onInit() {
     glUseProgram(*MeshShaders::currentProgram);
 
     boxCollection = Locator::getResource()->loadBoxes("meshes/mfw", "crispbit.crispbox");
+    updateHurtboxPanel();
 
     t_start = std::chrono::high_resolution_clock::now();
 
@@ -136,7 +141,6 @@ void CrispPainView::onInit() {
     glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
     /*t_now = std::chrono::high_resolution_clock::now();*/
 }
-
 
 void CrispPainView::onUpdate() {
     t_start = t_now;
