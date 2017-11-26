@@ -3,10 +3,11 @@
 #include <crispsynth/Locator.h>
 #include <QMenu>
 #include <QMenuBar>
-#include <QTimeLine>
 #include <QFileDialog>
 #include <QToolBar>
 #include <QLineEdit>
+#include <QHeaderView>
+#include <QStringList>
 #include <iostream>
 
 MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
@@ -43,14 +44,24 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
             //QSize(800 - 2 - 80, 500 - 1 - menuBar->height()));
     setCentralWidget(cpview);
 
+    hurtboxTable->setColumnCount(7);
+    hurtboxTable->verticalHeader()->setVisible(false);
+
+    QStringList headerLabels;
+    headerLabels << "id" << "name" << "r" << "h" <<  "x" << "y"
+        << "z" << "sX" << "sY" << "sZ";
+    hurtboxTable->setHorizontalHeaderLabels(headerLabels);
+
+    cpview->boxCollection = Locator::getResource()->loadBoxes("meshes/mfw", "crispbit.crispbox");
+    cpview->updateHurtboxTable(hurtboxTable);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(addHurtbox, SIGNAL(triggered()), this, SLOT(addHurtbox()));
+    connect(addHurtbox, &QAction::triggered, this, [this]{createHurtbox(hurtboxTable);});
 }
 
-void MainMenu::addHurtbox() {
-    cpview->createHurtbox();
+void MainMenu::createHurtbox(QTableWidget *table) {
+    cpview->createHurtbox(table);
 }
 
 void MainMenu::open() {

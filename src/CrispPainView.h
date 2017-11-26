@@ -4,6 +4,7 @@
 #include <chrono>
 #include <SFML/Graphics.hpp>
 #include <QWidget>
+#include <QTableWidget>
 #include <crispsynth/game-objects/TextObject.h>
 #include <crispsynth/game-objects/BoxCollection.h>
 #include <crispsynth/mesh/MeshContainer.h>
@@ -15,7 +16,9 @@ class CrispPainView : public QSFMLCanvas {
 public:
 
     CrispPainView(QWidget *parent, const QPoint& position, const QSize& size);
-    void createHurtbox();
+    void updateHurtboxTable(QTableWidget *table);
+    void createHurtbox(QTableWidget *table);
+    BoxCollection boxCollection;
 
 private:
 
@@ -23,7 +26,6 @@ private:
     void onUpdate() override;
     sf::FloatRect capsuleBoundingBox(float radius, float height, glm::mat4 modelMatrix);
     void drawCapsule(float radius, float height, glm::vec4 color, glm::mat4 modelMatrix);
-    void updateHurtboxPanel();
     sf::Color color = sf::Color(255, 0, 0, 255);
     std::unique_ptr<Pain> pain;
     std::unique_ptr<TextObject> text;
@@ -35,8 +37,6 @@ private:
     BonedMesh* object;
     sf::Clock clock;
     MeshContainer meshes;
-
-    BoxCollection boxCollection;
 
     glm::mat4 view;
     glm::mat4 proj;

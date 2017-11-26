@@ -5,15 +5,14 @@
 #include <cstdlib>
 #include <algorithm>
 #include <cmath>
-
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
-
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include <glm/matrix.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/ext.hpp>
 
 #include <crispsynth/Locator.h>
 #include <crispsynth/resources/LocalResources.h>
@@ -24,7 +23,7 @@
 
 #include "CrispPainView.h"
 
-#include <glm/ext.hpp>
+#include <QTableWidgetItem>
 
 glm::vec3 eye = glm::vec3(100.0f, 100.0f, 100.0f);
 glm::vec3 center = glm::vec3(0.0f, 30.0f, 0.0f);
@@ -99,8 +98,25 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
         //text->updatePosition(320, 170);
 }
 
-void CrispPainView::updateHurtboxPanel() {
-
+void CrispPainView::updateHurtboxTable(QTableWidget *table) {
+    std::cout << boxCollection.hurtboxes.size() << std::endl;
+    table->setRowCount(boxCollection.hurtboxes.size());
+    for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
+        const auto &hurtbox = boxCollection.hurtboxes[i];
+        std::cout << hurtbox.id << std::endl;
+        std::cout << hurtbox.name << std::endl;
+        table->setItem(i, 0, new QTableWidgetItem(QString::number(hurtbox.id)));
+        table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(hurtbox.name)));
+        table->setItem(i, 2, new QTableWidgetItem(QString::number(hurtbox.r)));
+        table->setItem(i, 3, new QTableWidgetItem(QString::number(hurtbox.h)));
+        table->setItem(i, 4, new QTableWidgetItem(QString::number(hurtbox.x)));
+        table->setItem(i, 5, new QTableWidgetItem(QString::number(hurtbox.y)));
+        table->setItem(i, 6, new QTableWidgetItem(QString::number(hurtbox.z)));
+        table->setItem(i, 7, new QTableWidgetItem(QString::number(hurtbox.sX)));
+        table->setItem(i, 8, new QTableWidgetItem(QString::number(hurtbox.sY)));
+        table->setItem(i, 9, new QTableWidgetItem(QString::number(hurtbox.sZ)));
+    }
+    //table->setItem(0, 1, new QTableWidgetItem("test"));
 }
 
 void CrispPainView::onInit() {
@@ -119,9 +135,6 @@ void CrispPainView::onInit() {
     CapsuleShader::init();
     MeshShaders::currentProgram = &MeshShaders::bonedMeshShaderProgram;
     glUseProgram(*MeshShaders::currentProgram);
-
-    boxCollection = Locator::getResource()->loadBoxes("meshes/mfw", "crispbit.crispbox");
-    updateHurtboxPanel();
 
     t_start = std::chrono::high_resolution_clock::now();
 
@@ -252,6 +265,6 @@ void CrispPainView::onUpdate() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void CrispPainView::createHurtbox() {
+void CrispPainView::createHurtbox(QTableWidget *table) {
     std::cout << "lol" << std::endl;
 }

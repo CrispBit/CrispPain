@@ -15,7 +15,7 @@ public:
     QTableWidget *hurtboxTable;
 public slots:
     void open();
-    void addHurtbox();
+    void createHurtbox(QTableWidget *table);
 };
 
 #endif
