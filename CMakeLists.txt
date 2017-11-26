@@ -41,9 +41,8 @@ if (ASSIMP_FOUND)
 endif()
 
 # Detect and add Qt
-find_package(Qt4 REQUIRED)
-include(${QT_USE_FILE})
-target_link_libraries(crisppain ${QT_LIBRARIES})
+find_package(Qt5Widgets REQUIRED)
+target_link_libraries(crisppain Qt5::Widgets)
 
 find_package(X11)
 target_link_libraries(crisppain ${X11_LIBRARIES})
