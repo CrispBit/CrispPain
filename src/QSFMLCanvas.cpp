@@ -3,6 +3,7 @@
  */
 #include <SFML/Graphics.hpp>
 #include <QWidget>
+#include <QWindow>
 #include <QTimer>
 #include "QSFMLCanvas.h"
 
@@ -11,7 +12,7 @@
 #include <X11/Xlib.h>
 #endif //Q_WS_ZX11
 
-QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& size,
+/*QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& size,
         unsigned int frameTime) : QWidget(parent), myInitialized(false) {
 
     // Setup some states to allow direct rendering into the widget
@@ -28,6 +29,22 @@ QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& s
 
     // Setup the timer
     myTimer.setInterval(frameTime);
+}*/
+
+QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& size,
+        unsigned int frameTime) : QWindow() {
+
+    setSurfaceType(QWindow::OpenGLSurface);
+
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    setFormat(format);
+
+    qwidget = QWidget::createWindowContainer(this, parent);
+    qwidget->move(position);
+    qwidget->resize(size);
+
+    myTimer.setInterval(frameTime);
 }
 
 QSFMLCanvas::~QSFMLCanvas() {}
@@ -39,7 +56,7 @@ void QSFMLCanvas::showEvent(QShowEvent*) {
 #endif
 
         // Create the SFML window with the widget handle
-        sf::RenderWindow::create((sf::WindowHandle) winId());
+        sf::RenderWindow::create((sf::WindowHandle) winId(), sf::ContextSettings(24, 0, 0, 3, 0));
 
         // Let the derived class do its specific stuff
         onInit();
@@ -56,6 +73,10 @@ QPaintEngine *QSFMLCanvas::paintEngine() const {
     return 0;
 }
 
+void QSFMLCanvas::repaint() {
+    paintEvent(0); // hehe
+}
+
 void QSFMLCanvas::paintEvent(QPaintEvent*) {
 
     // Let the derived class do its specific stuff
@@ -66,5 +87,5 @@ void QSFMLCanvas::paintEvent(QPaintEvent*) {
 }
 
 void QSFMLCanvas::resizeEvent(QResizeEvent* event) {
-    setSize(sf::Vector2u(QWidget::width(), QWidget::height()));
+    setSize(sf::Vector2u(QWindow::width(), QWindow::height()));
 }

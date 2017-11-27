@@ -42,7 +42,7 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
     cpview = new CrispPainView(this, QPoint(1, menuBar->height()),
             QSize(10, 10));
             //QSize(800 - 2 - 80, 500 - 1 - menuBar->height()));
-    setCentralWidget(cpview);
+    setCentralWidget(cpview->qwidget);
 
     hurtboxTable->setColumnCount(7);
     hurtboxTable->verticalHeader()->setVisible(false);
