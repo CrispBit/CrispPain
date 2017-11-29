@@ -12,25 +12,6 @@
 #include <X11/Xlib.h>
 #endif //Q_WS_ZX11
 
-/*QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& size,
-        unsigned int frameTime) : QWidget(parent), myInitialized(false) {
-
-    // Setup some states to allow direct rendering into the widget
-    setAttribute(Qt::WA_PaintOnScreen);
-    setAttribute(Qt::WA_OpaquePaintEvent);
-    setAttribute(Qt::WA_NoSystemBackground);
-
-    // Set strong focus to enable keyboard events to be received
-    setFocusPolicy(Qt::StrongFocus);
-
-    // Setup the widget geometry
-    move(position);
-    resize(size);
-
-    // Setup the timer
-    myTimer.setInterval(frameTime);
-}*/
-
 QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize& size,
         unsigned int frameTime) : QWindow() {
 
