@@ -47,6 +47,10 @@
           display: inline;
           z-index: 1;
       }
+
+      span.cross {
+          text-decoration: line-through;
+      }
     </style>
   </head>
   <body>
@@ -62,7 +66,6 @@
         <th>Assigned To</th>
         <th>Completion Verification</th>
         <th>Expected Result</th>
-        <th>Received Result</th>
         <th>Deliverables</th>
       </tr>
       <tr>
@@ -74,7 +77,6 @@
         <td>Matthew Tran</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window appears with a menu bar, side bar, and view in the middle that has the words "test" in white against a black background</td>
-        <td rowspan="2"></td>
         <td rowspan="2"><div class="img"><img src="test.png"/><img src="test.png"/></div></td>
       </tr>
       <tr class="sub">
@@ -90,7 +92,6 @@
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A text file that specifies the data format in which hitboxes and hurtboxes will be stored.</td>
-        <td rowspan="2"></td>
         <td rowspan="2"><a href="https://github.com/CrispBit/CrispPain/blob/master/docs/example.crispbox" target="_blank">Link to documentation</a></td>
       </tr>
       <tr class="sub">
@@ -112,7 +113,6 @@
                 {numIndices = 234, materialIndex = 2, baseVertex = 596, baseIndex = 2415},<br/>
                 {numIndices = 48, materialIndex = 3, baseVertex = 654, baseIndex = 2649},<br/>
                 {numIndices = 66, materialIndex = 4, baseVertex = 672, baseIndex = 2697}</span></td>
-        <td rowspan="2"></td>
         <td rowspan="2"><div class="img"><img src="meems.png"/><img src="meems.png"/></div></td>
       </tr>
       <tr class="sub">
@@ -128,7 +128,6 @@
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window with a menu bar, side bar, and view in the middle shows. In the view there is a man holding a lantern and looking around</td>
-        <td rowspan="2"></td>
         <td rowspan="2"><div class="img"><img src="faancy.gif"/><img src="faancy.gif"/></div></td>
       </tr>
       <tr class="sub">
@@ -144,7 +143,6 @@
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window with a menu bar, side bar, and view in the middle shows. In the view there is a stick figure throwing kicks. Yellow spherocylinders will appear as well and be scaled with the figure's movements</td>
-        <td rowspan="2"></td>
         <td rowspan="2"><div class="img"><img src="hurtboxes.gif"/><img src="hurtboxes.gif"/></div></td>
       </tr>
       <tr class="sub">
@@ -160,7 +158,6 @@
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window with a menu bar, side bar, and view in the middle shows. In the view there is a stick figure throwing kicks. Red spheres will show in arbitrary locations throughout animation. Some will interpolate between frames, showing interpolation as a spherocylinder connecting the sphere of the previous and current frame</td>
-        <td rowspan="2"></td>
         <td rowspan="2"><div class="img"><img src="hitboxes.gif"/><img src="hitboxes.gif"/></div></td>
       </tr>
       <tr class="sub">
@@ -170,13 +167,12 @@
       <tr>
         <td rowspan="2">100%</td>
         <td rowspan="2">70%</td>
-        <td rowspan="2">2017-11-20</td>
+        <td rowspan="2"><span class="cross">2017-11-20</span><br/>2017-12-3</td>
         <td rowspan="2">Allow creation of hurtboxes</td>
         <td>Add a button to the side menu with an icon that resembles a hurtbox. Make it trigger a different side menu layout with textboxes for entering details for hurtbox</td>
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window with a menu bar, side bar, and view in the middle shows. The side menu has a button with an icon. The button is clicked, changing the side menu layout. Data is entered into this new layout, and the confirm button is pressed. An animation then shows in the view with a new hurtbox with the specified properties.</td>
-        <td rowspan="2"></td>
         <td rowspan="2">Video of expected result</td>
       </tr>
       <tr class="sub">
@@ -186,13 +182,12 @@
       <tr>
         <td rowspan="2">0%</td>
         <td rowspan="2">0%</td>
-        <td rowspan="2">2017-11-25</td>
+        <td rowspan="2"><span class="cross">2017-11-25</span><br/>2017-12-7</td>
         <td rowspan="2">Allow creation of hitboxes</td>
         <td>Add a button to the side menu with an icon that resembles a hitbox. Make it trigger a different side menu layout with textboxes for entering details for hitbox</td>
         <td>Abraham Hamidi</td>
         <td rowspan="2">Visual check</td>
         <td rowspan="2">A window with a menu bar, side bar, and view in the middle shows. The side menu has a button with an icon. The button is clicked, changing the side menu layout. Data is entered into this new layout, and the confirm button is pressed. An animation then shows in the view with a new hitbox with the specified properties.</td>
-        <td rowspan="2"></td>
         <td rowspan="2">Video of expected result</td>
       </tr>
       <tr class="sub">
