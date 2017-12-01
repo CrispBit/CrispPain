@@ -2,12 +2,17 @@
 #define CRISPPAINVIEW_H
 
 #include <chrono>
+
 #include <SFML/Graphics.hpp>
+
 #include <QWidget>
 #include <QTableWidget>
+#include <QSpinBox>
+
 #include <crispsynth/game-objects/TextObject.h>
 #include <crispsynth/game-objects/BoxCollection.h>
 #include <crispsynth/mesh/MeshContainer.h>
+
 #include "QSFMLCanvas.h"
 #include "Pain.h"
 
@@ -42,7 +47,6 @@ private:
     glm::mat4 view;
     glm::mat4 proj;
     glm::mat4 trans;
-    *hurtboxSYItem = nullptr,
 
     GLint uniProj;
     GLint uniTrans;
@@ -59,7 +63,7 @@ private:
              *hurtboxZItem = nullptr,
              *hurtboxSXItem = nullptr,
              *hurtboxSYItem = nullptr,
-             *hurtboxSZItem = nullptr,
+             *hurtboxSZItem = nullptr;
 };
 
 #endif // CRISPPAINVIEW_H
