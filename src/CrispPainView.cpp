@@ -95,11 +95,9 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
         pain = std::make_unique<Pain>(*this);
         font = Locator::getResource()->loadFont("Boogaloo-Regular.ttf");
         text = std::make_unique<TextObject>("test", font);
-        //text->updatePosition(320, 170);
 }
 
 void CrispPainView::updateHurtboxTable(QTableWidget *table) {
-    std::cout << boxCollection.hurtboxes.size() << std::endl;
     table->setRowCount(boxCollection.hurtboxes.size());
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         const auto &hurtbox = boxCollection.hurtboxes[i];
@@ -117,6 +115,9 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
         table->setItem(i, 9, new QTableWidgetItem(QString::number(hurtbox.sZ)));
     }
     //table->setItem(0, 1, new QTableWidgetItem("test"));
+}
+
+void CrispPainView::createHurtboxTable(QTableWidget *table) {
 }
 
 void CrispPainView::onInit() {
@@ -152,7 +153,6 @@ void CrispPainView::onInit() {
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
     glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
-    /*t_now = std::chrono::high_resolution_clock::now();*/
 }
 
 void CrispPainView::onUpdate() {
@@ -165,7 +165,6 @@ void CrispPainView::onUpdate() {
 
     trans = glm::rotate(
             trans,
-            //time * glm::radians(2.0f),
             glm::radians(.1f),
             glm::vec3(0.0f, 1.0f, 0.0f)
     );
@@ -199,7 +198,6 @@ void CrispPainView::onUpdate() {
     object->draw();
 
     glUseProgram(CapsuleShader::program);
-    //glClear(GL_DEPTH_BUFFER_BIT);
 
     switch (frame) {
         case 45:
