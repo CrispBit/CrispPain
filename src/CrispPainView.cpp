@@ -101,7 +101,15 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         const auto &hurtbox = boxCollection.hurtboxes.at(i);
         hurtboxNameItems.at(i)->setText(QString::fromStdString(hurtbox.name));
-        //hurtboxRadiusItems.at(i)->
+        hurtboxIdItems.at(i)->setValue(hurtbox.id);
+        hurtboxRadiusItems.at(i)->setValue(hurtbox.r);
+        hurtboxHeightItems.at(i)->setValue(hurtbox.h);
+        hurtboxXItems.at(i)->setValue(hurtbox.x);
+        hurtboxYItems.at(i)->setValue(hurtbox.y);
+        hurtboxZItems.at(i)->setValue(hurtbox.z);
+        hurtboxSXItems.at(i)->setValue(hurtbox.sX);
+        hurtboxSYItems.at(i)->setValue(hurtbox.sY);
+        hurtboxSZItems.at(i)->setValue(hurtbox.sZ);
     }
 }
 
