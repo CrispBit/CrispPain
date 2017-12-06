@@ -44,16 +44,17 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
             //QSize(800 - 2 - 80, 500 - 1 - menuBar->height()));
     setCentralWidget(cpview->qwidget);
 
-    hurtboxTable->setColumnCount(7);
+    hurtboxTable->setColumnCount(10);
     hurtboxTable->verticalHeader()->setVisible(false);
 
     QStringList headerLabels;
     headerLabels << "id" << "name" << "r" << "h" <<  "x" << "y"
         << "z" << "sX" << "sY" << "sZ";
     hurtboxTable->setHorizontalHeaderLabels(headerLabels);
+    hurtboxTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     cpview->boxCollection = Locator::getResource()->loadBoxes("meshes/mfw", "crispbit.crispbox");
-    cpview->updateHurtboxTable(hurtboxTable);
+    cpview->createHurtboxTable(hurtboxTable);
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));

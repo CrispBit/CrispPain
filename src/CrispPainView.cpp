@@ -98,26 +98,63 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
 }
 
 void CrispPainView::updateHurtboxTable(QTableWidget *table) {
+    for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
+        const auto &hurtbox = boxCollection.hurtboxes.at(i);
+        hurtboxNameItems.at(i)->setText(QString::fromStdString(hurtbox.name));
+        //hurtboxRadiusItems.at(i)->
+    }
+}
+
+void CrispPainView::createHurtboxTable(QTableWidget *table) {
     table->setRowCount(boxCollection.hurtboxes.size());
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         const auto &hurtbox = boxCollection.hurtboxes[i];
         std::cout << hurtbox.id << std::endl;
         std::cout << hurtbox.name << std::endl;
-        table->setItem(i, 0, new QTableWidgetItem(QString::number(hurtbox.id)));
-        table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(hurtbox.name)));
-        table->setItem(i, 2, new QTableWidgetItem(QString::number(hurtbox.r)));
-        table->setItem(i, 3, new QTableWidgetItem(QString::number(hurtbox.h)));
-        table->setItem(i, 4, new QTableWidgetItem(QString::number(hurtbox.x)));
-        table->setItem(i, 5, new QTableWidgetItem(QString::number(hurtbox.y)));
-        table->setItem(i, 6, new QTableWidgetItem(QString::number(hurtbox.z)));
-        table->setItem(i, 7, new QTableWidgetItem(QString::number(hurtbox.sX)));
-        table->setItem(i, 8, new QTableWidgetItem(QString::number(hurtbox.sY)));
-        table->setItem(i, 9, new QTableWidgetItem(QString::number(hurtbox.sZ)));
-    }
-    //table->setItem(0, 1, new QTableWidgetItem("test"));
-}
+        QSpinBox *hurtboxIdItem = new QSpinBox();
+        QTableWidgetItem *hurtboxNameItem = new QTableWidgetItem();
+        QDoubleSpinBox *hurtboxRadiusItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxHeightItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxXItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxYItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxZItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxSXItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxSYItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxSZItem = new QDoubleSpinBox();
 
-void CrispPainView::createHurtboxTable(QTableWidget *table) {
+        hurtboxIdItem->setRange(-10000,10000);
+        hurtboxRadiusItem->setRange(-10000,10000);
+        hurtboxHeightItem->setRange(-10000,10000);
+        hurtboxXItem->setRange(-10000,10000);
+        hurtboxYItem->setRange(-10000,10000);
+        hurtboxZItem->setRange(-10000,10000);
+        hurtboxSXItem->setRange(-10000,10000);
+        hurtboxSYItem->setRange(-31337,10000);
+        hurtboxSZItem->setRange(-10000,10000);
+
+        hurtboxIdItems.push_back(hurtboxIdItem);
+        hurtboxNameItems.push_back(hurtboxNameItem);
+        hurtboxRadiusItems.push_back(hurtboxRadiusItem);
+        hurtboxHeightItems.push_back(hurtboxHeightItem);
+        hurtboxXItems.push_back(hurtboxXItem);
+        hurtboxYItems.push_back(hurtboxYItem);
+        hurtboxZItems.push_back(hurtboxZItem);
+        hurtboxSXItems.push_back(hurtboxSXItem);
+        hurtboxSYItems.push_back(hurtboxSYItem);
+        hurtboxSZItems.push_back(hurtboxSZItem);
+
+        table->setCellWidget(i, 0, hurtboxIdItem);
+        table->setItem(i, 1,  hurtboxNameItem);
+        table->setCellWidget(i, 2,  hurtboxRadiusItem);
+        table->setCellWidget(i, 3,  hurtboxHeightItem);
+        table->setCellWidget(i, 4,  hurtboxXItem);
+        table->setCellWidget(i, 5,  hurtboxYItem);
+        table->setCellWidget(i, 6,  hurtboxZItem);
+        table->setCellWidget(i, 7,  hurtboxSXItem);
+        table->setCellWidget(i, 8,  hurtboxSYItem);
+        table->setCellWidget(i, 9,  hurtboxSZItem);
+    }
+    updateHurtboxTable(table);
 }
 
 void CrispPainView::onInit() {

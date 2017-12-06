@@ -54,16 +54,16 @@ private:
 
     float lookDeg = 50;
 
-    QSpinBox *hurtboxIdItem = nullptr,
-             *hurtboxNameItem = nullptr,
-             *hurtboxRadiusItem = nullptr,
-             *hurtboxHeightItem = nullptr,
-             *hurtboxXItem = nullptr,
-             *hurtboxYItem = nullptr,
-             *hurtboxZItem = nullptr,
-             *hurtboxSXItem = nullptr,
-             *hurtboxSYItem = nullptr,
-             *hurtboxSZItem = nullptr;
+    std::vector<QSpinBox*> hurtboxIdItems;
+    std::vector<QTableWidgetItem*> hurtboxNameItems;
+    std::vector<QDoubleSpinBox*> hurtboxRadiusItems,
+                                 hurtboxHeightItems,
+                                 hurtboxXItems,
+                                 hurtboxYItems,
+                                 hurtboxZItems,
+                                 hurtboxSXItems,
+                                 hurtboxSYItems,
+                                 hurtboxSZItems;
 };
 
 #endif // CRISPPAINVIEW_H
