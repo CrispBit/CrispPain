@@ -101,6 +101,7 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         const auto &hurtbox = boxCollection.hurtboxes.at(i);
         hurtboxNameItems.at(i)->setText(QString::fromStdString(hurtbox.name));
+        std::cout << hurtbox.name << std::endl;
         hurtboxIdItems.at(i)->setValue(hurtbox.id);
         hurtboxRadiusItems.at(i)->setValue(hurtbox.r);
         hurtboxHeightItems.at(i)->setValue(hurtbox.h);
@@ -113,12 +114,63 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
     }
 }
 
+void CrispPainView::updateHurtboxName(HurtboxComponent &hurtbox, const QString &result) {
+    /* if (hurtbox.name != "") {
+        hurtbox.name = result.toStdString();
+    } */
+}
+
+void CrispPainView::updateHurtboxId(HurtboxComponent &hurtbox, int result) {
+    hurtbox.id = result;
+}
+
+void CrispPainView::updateHurtboxRadius(HurtboxComponent &hurtbox, float result) {
+    hurtbox.r = result;
+}
+
+void CrispPainView::updateHurtboxHeight(HurtboxComponent &hurtbox, float result) {
+    hurtbox.h = result;
+}
+
+void CrispPainView::updateHurtboxX(HurtboxComponent &hurtbox, float result) {
+    hurtbox.x = result;
+}
+
+void CrispPainView::updateHurtboxY(HurtboxComponent &hurtbox, float result) {
+    hurtbox.y = result;
+}
+
+void CrispPainView::updateHurtboxZ(HurtboxComponent &hurtbox, float result) {
+    hurtbox.r = result;
+}
+
+void CrispPainView::updateHurtboxSX(HurtboxComponent &hurtbox, float result) {
+    hurtbox.sX = result;
+}
+
+void CrispPainView::updateHurtboxSY(HurtboxComponent &hurtbox, float result) {
+    hurtbox.sY = result;
+}
+
+void CrispPainView::updateHurtboxSZ(HurtboxComponent &hurtbox, float result) {
+    hurtbox.sZ = result;
+}
+
 void CrispPainView::createHurtboxTable(QTableWidget *table) {
+    hurtboxIdItems.clear();
+    hurtboxNameItems.clear();
+    hurtboxRadiusItems.clear();
+    hurtboxRadiusItems.clear();
+    hurtboxHeightItems.clear();
+    hurtboxXItems.clear();
+    hurtboxYItems.clear();
+    hurtboxZItems.clear();
+    hurtboxSXItems.clear();
+    hurtboxSYItems.clear();
+    hurtboxSZItems.clear();
     table->setRowCount(boxCollection.hurtboxes.size());
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
-        const auto &hurtbox = boxCollection.hurtboxes[i];
-        std::cout << hurtbox.id << std::endl;
-        std::cout << hurtbox.name << std::endl;
+        auto &hurtbox = boxCollection.hurtboxes[i];
         QSpinBox *hurtboxIdItem = new QSpinBox();
         QTableWidgetItem *hurtboxNameItem = new QTableWidgetItem();
         QDoubleSpinBox *hurtboxRadiusItem = new QDoubleSpinBox();
@@ -161,6 +213,10 @@ void CrispPainView::createHurtboxTable(QTableWidget *table) {
         table->setCellWidget(i, 7,  hurtboxSXItem);
         table->setCellWidget(i, 8,  hurtboxSYItem);
         table->setCellWidget(i, 9,  hurtboxSZItem);
+
+        QObject::connect(table, &QTableWidget::itemChanged, [&](QTableWidgetItem *result){ updateHurtboxName(hurtbox, result->text()); });
+        QObject::connect(hurtboxIdItem, QOverload<int>::of(&QSpinBox::valueChanged), [&](int result){ updateHurtboxId(hurtbox, result); });
+        // QObject::connect(hurtboxIdItem, QOverload<int>::of(&QSpinBox::valueChanged), [&](int result){ updateHurtboxId(hurtbox, result); });
     }
     updateHurtboxTable(table);
 }
@@ -309,5 +365,6 @@ void CrispPainView::onUpdate() {
 }
 
 void CrispPainView::createHurtbox(QTableWidget *table) {
-    std::cout << "lol" << std::endl;
+    boxCollection.hurtboxes.push_back(HurtboxComponent());
+    createHurtboxTable(table);
 }

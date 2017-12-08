@@ -64,6 +64,17 @@ private:
                                  hurtboxSXItems,
                                  hurtboxSYItems,
                                  hurtboxSZItems;
+
+    void updateHurtboxName(HurtboxComponent &hurtbox, const QString &result);
+    void updateHurtboxId(HurtboxComponent &hurtbox, int result);
+    void updateHurtboxRadius(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxHeight(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxX(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxY(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxZ(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxSX(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxSY(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxSZ(HurtboxComponent &hurtbox, float result);
 };
 
 #endif // CRISPPAINVIEW_H
