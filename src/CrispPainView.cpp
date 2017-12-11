@@ -115,9 +115,7 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
 }
 
 void CrispPainView::updateHurtboxName(HurtboxComponent &hurtbox, const QString &result) {
-    /* if (hurtbox.name != "") {
-        hurtbox.name = result.toStdString();
-    } */
+    hurtbox.name = result.toStdString();
 }
 
 void CrispPainView::updateHurtboxId(HurtboxComponent &hurtbox, int result) {
@@ -214,11 +212,19 @@ void CrispPainView::createHurtboxTable(QTableWidget *table) {
         table->setCellWidget(i, 8,  hurtboxSYItem);
         table->setCellWidget(i, 9,  hurtboxSZItem);
 
-        QObject::connect(table, &QTableWidget::itemChanged, [&](QTableWidgetItem *result){ updateHurtboxName(hurtbox, result->text()); });
         QObject::connect(hurtboxIdItem, QOverload<int>::of(&QSpinBox::valueChanged), [&](int result){ updateHurtboxId(hurtbox, result); });
-        // QObject::connect(hurtboxIdItem, QOverload<int>::of(&QSpinBox::valueChanged), [&](int result){ updateHurtboxId(hurtbox, result); });
+        QObject::connect(hurtboxRadiusItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxRadius(hurtbox, result); });
+        QObject::connect(hurtboxHeightItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxHeight(hurtbox, result); });
+        QObject::connect(hurtboxXItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxX(hurtbox, result); });
+        QObject::connect(hurtboxYItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxY(hurtbox, result); });
+        QObject::connect(hurtboxZItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxZ(hurtbox, result); });
+        QObject::connect(hurtboxSXItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxSX(hurtbox, result); });
+        QObject::connect(hurtboxSYItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxSY(hurtbox, result); });
+        QObject::connect(hurtboxSZItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxSZ(hurtbox, result); });
     }
+
     updateHurtboxTable(table);
+    QObject::connect(table, &QTableWidget::itemChanged, [&](QTableWidgetItem *result){ updateHurtboxName(boxCollection.hurtboxes.at(result->row()), result->text()); });
 }
 
 void CrispPainView::onInit() {
