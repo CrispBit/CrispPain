@@ -14,10 +14,6 @@ v0
 ; yOffset- y offset from bone, 16-bit float
 ; zOffset- z offset from bone, 16-bit float
 
-; frameId: boxid, type (capsule, ellipsoid, sphere),
-           r, sx, sy, sz, x, y, z[, ...]
-
-
 ; more comments
 [ib] ; hItBox
 
