@@ -306,7 +306,7 @@ void CrispPainView::onUpdate() {
 
     glUseProgram(CapsuleShader::program);
 
-    switch (frame) {
+    /* switch (frame) {
         case 45:
         case 46:
             drawCapsule(3.0f, 6.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::rotate(60.0f, glm::vec3(1, 0, 0)) * glm::translate(glm::vec3(3, -10, 10)));
@@ -317,9 +317,18 @@ void CrispPainView::onUpdate() {
         case 50:
             drawCapsule(3.0f, 6.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::rotate(60.0f, glm::vec3(1, 0, 0)) * glm::rotate(-.6f, glm::vec3(0, 1, 0)) * glm::translate(glm::vec3(10, -10, 15)));
             break;
-    }
+    } */
 
     glEnable(GL_SCISSOR_TEST);
+
+    for (auto const &it : boxCollection.hitboxes) {
+        auto hitbox = it.second;
+        if (!hitbox.hasFrame(frame)) {
+            continue;
+        }
+        std::cout << "yay" << std::endl;
+        drawCapsule(hitbox.r, 0, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::translate(glm::vec3(hitbox.x, hitbox.y, hitbox.z)));
+    }
 
     std::vector<sf::RectangleShape> rectangles;
     for (auto hurtbox : boxCollection.hurtboxes) {
