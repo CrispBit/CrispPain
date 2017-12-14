@@ -37,6 +37,8 @@ private:
     std::unique_ptr<TextObject> text;
     sf::Font font;
 
+    void addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hurtbox, unsigned int i);
+
     std::chrono::time_point<std::chrono::high_resolution_clock> t_start;
     std::chrono::time_point<std::chrono::high_resolution_clock> t_now;
 
