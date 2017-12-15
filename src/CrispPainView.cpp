@@ -101,7 +101,6 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         const auto &hurtbox = boxCollection.hurtboxes.at(i);
         hurtboxNameItems.at(i)->setText(QString::fromStdString(hurtbox.name));
-        std::cout << hurtbox.name << std::endl;
         hurtboxIdItems.at(i)->setValue(hurtbox.id);
         hurtboxRadiusItems.at(i)->setValue(hurtbox.r);
         hurtboxHeightItems.at(i)->setValue(hurtbox.h);
@@ -230,10 +229,8 @@ void CrispPainView::createHurtboxTable(QTableWidget *table) {
 
     updateHurtboxTable(table);
     QObject::connect(table, &QTableWidget::itemChanged, [&](QTableWidgetItem *result) {
-            std::cout << "hai" << std::endl;
         if (result->column() == 1) {
             updateHurtboxName(boxCollection.hurtboxes.at(result->row()), result->text());
-            std::cout << "hello" << std::endl;
         }
     });
 
@@ -338,8 +335,9 @@ void CrispPainView::onUpdate() {
         if (!hitbox.hasFrame(frame)) {
             continue;
         }
-        std::cout << "yay" << std::endl;
-        drawCapsule(hitbox.r, 0, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::translate(glm::vec3(hitbox.x, hitbox.y, hitbox.z)));
+        hitbox.gotoFrame(frame);
+        std::cout << hitbox.x() << std::endl;
+        drawCapsule(hitbox.r(), 0, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::translate(glm::vec3(hitbox.x(), hitbox.y(), hitbox.z())));
     }
 
     std::vector<sf::RectangleShape> rectangles;
