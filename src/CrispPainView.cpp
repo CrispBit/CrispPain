@@ -97,6 +97,9 @@ CrispPainView::CrispPainView(QWidget *parent, const QPoint& position, const QSiz
         text = std::make_unique<TextObject>("test", font);
 }
 
+void CrispPainView::updateHitboxTable(QTableWidget *table) {
+}
+
 void CrispPainView::updateHurtboxTable(QTableWidget *table) {
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         const auto &hurtbox = boxCollection.hurtboxes.at(i);
@@ -209,6 +212,10 @@ void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hu
 
 }
 
+void CrispPainView::createHitboxTable(QTableWidget *table) {
+
+}
+
 void CrispPainView::createHurtboxTable(QTableWidget *table) {
     hurtboxIdItems.clear();
     hurtboxNameItems.clear();
@@ -253,12 +260,9 @@ void CrispPainView::onInit() {
     MeshShaders::currentProgram = &MeshShaders::bonedMeshShaderProgram;
     glUseProgram(*MeshShaders::currentProgram);
 
-    t_start = std::chrono::high_resolution_clock::now();
-
     object = meshes.createBoned("mfw", "crispbit.fbx");
 
     uniTrans = glGetUniformLocation(*MeshShaders::currentProgram, "model");
-    t_now = std::chrono::high_resolution_clock::now();
 
     view = glm::lookAt(
             eye,
@@ -273,19 +277,12 @@ void CrispPainView::onInit() {
 
 void CrispPainView::onUpdate() {
     t_start = t_now;
-    t_now = std::chrono::high_resolution_clock::now();
     glViewport(0, 0, getSize().x, getSize().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(*MeshShaders::currentProgram);
 
-    trans = glm::rotate(
-            trans,
-            glm::radians(.1f),
-            glm::vec3(0.0f, 1.0f, 0.0f)
-    );
-
-    glm::mat4 yabe = glm::scale(glm::vec3(0.1)) * trans;
+    glm::mat4 yabe = glm::scale(glm::vec3(0.1));
 
     sf::Vector2f resolution(getSize());
 
@@ -299,7 +296,7 @@ void CrispPainView::onUpdate() {
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(yabe));
 
     std::vector<glm::mat4> Transforms;
-    float seconds = clock.getElapsedTime().asSeconds();
+    float seconds = 1.0f / 60.0f * currentFrame;
     object->boneTransform(seconds, Transforms);
     for (unsigned int i = 0; i < Transforms.size(); ++i) {
         const std::string name = "gBones[" + std::to_string(i) + "]"; // every transform is for a different bone
@@ -315,28 +312,16 @@ void CrispPainView::onUpdate() {
 
     glUseProgram(CapsuleShader::program);
 
-    /* switch (frame) {
-        case 45:
-        case 46:
-            drawCapsule(3.0f, 6.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::rotate(60.0f, glm::vec3(1, 0, 0)) * glm::translate(glm::vec3(3, -10, 10)));
-            break;
-        case 47:
-        case 48:
-        case 49:
-        case 50:
-            drawCapsule(3.0f, 6.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::rotate(60.0f, glm::vec3(1, 0, 0)) * glm::rotate(-.6f, glm::vec3(0, 1, 0)) * glm::translate(glm::vec3(10, -10, 15)));
-            break;
-    } */
-
     glEnable(GL_SCISSOR_TEST);
 
     for (auto const &it : boxCollection.hitboxes) {
         auto hitbox = it.second;
-        if (!hitbox.hasFrame(frame)) {
+        if (!hitbox.hasFrame(this->currentFrame)) {
             continue;
         }
-        hitbox.gotoFrame(frame);
-        std::cout << hitbox.x() << std::endl;
+        if (hitbox.currentFrame() != this->currentFrame) {
+            hitbox.gotoFrame(this->currentFrame);
+        }
         drawCapsule(hitbox.r(), 0, glm::vec4(1.0f, 0.0f, 0.0f, 0.3f), yabe * glm::scale(glm::vec3(20)) * glm::translate(glm::vec3(hitbox.x(), hitbox.y(), hitbox.z())));
     }
 
@@ -389,9 +374,23 @@ void CrispPainView::onUpdate() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void CrispPainView::createHitbox(QTableWidget *table) {
+    boxCollection.hitboxes[0].gotoFrame(this->currentFrame);
+}
+
 void CrispPainView::createHurtbox(QTableWidget *table) {
     boxCollection.hurtboxes.push_back(HurtboxComponent());
     unsigned int size = boxCollection.hurtboxes.size();
     table->insertRow(size-1);
     addHurtboxTableRow(table, boxCollection.hurtboxes.back(), size-1);
+}
+
+void CrispPainView::nextFrame() {
+    this->currentFrame++;
+}
+
+void CrispPainView::prevFrame() {
+    if (this->currentFrame > 0) {
+        this->currentFrame--;
+    }
 }

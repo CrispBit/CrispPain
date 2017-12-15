@@ -18,12 +18,19 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
     QAction *newA = new QAction(newPix, "&New", this),
             *open = new QAction(openPix, "&Open", this),
+            *frameForward = new QAction("&Frame Advance", this),
+            *frameBack = new QAction("&Frame Back", this),
             *quit = new QAction(quitPix, "&Quit", this);
+    frameForward->setShortcut(tr("r"));
+    frameBack->setShortcut(tr("e"));
     quit->setShortcut(tr("CTRL+Q"));
 
     menuBar = QMainWindow::menuBar()->addMenu("&File");
     menuBar->addAction(newA);
     menuBar->addAction(open);
+    menuBar->addSeparator();
+    menuBar->addAction(frameForward);
+    menuBar->addAction(frameBack);
     menuBar->addSeparator();
     menuBar->addAction(quit);
 
@@ -31,12 +38,18 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
     QToolBar *toolbar = new QToolBar("toolbar");
     QToolBar *propertiesPane = new QToolBar("properties");
+    QTabWidget *propertiesTabs = new QTabWidget();
+    QAction *addHitbox = toolbar->addAction(QIcon((Locator::rootPath / "assets/images/add-hitbox.png").c_str()), "add hitbox");
     QAction *addHurtbox = toolbar->addAction(QIcon((Locator::rootPath / "assets/images/add-hurtbox.png").c_str()), "add hurtbox");
     hurtboxTable = new QTableWidget(propertiesPane);
+    hitboxTable = new QTableWidget(propertiesPane);
 
     this->addToolBar(Qt::RightToolBarArea, toolbar);
     this->addToolBar(Qt::BottomToolBarArea, propertiesPane);
-    propertiesPane->addWidget(hurtboxTable);
+    propertiesPane->addWidget(propertiesTabs);
+
+    propertiesTabs->addTab(hurtboxTable, "hurtboxes");
+    propertiesTabs->addTab(hitboxTable, "hitboxes");
 
     // set up main view
     cpview = new CrispPainView(this, QPoint(1, menuBar->height()),
@@ -46,6 +59,10 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
     hurtboxTable->setColumnCount(10);
     hurtboxTable->verticalHeader()->setVisible(false);
     hurtboxTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    hitboxTable->setColumnCount(2);
+    hitboxTable->verticalHeader()->setVisible(false);
+    hitboxTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     QStringList headerLabels;
     headerLabels << "id" << "name" << "r" << "h" <<  "x" << "y"
@@ -58,11 +75,26 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
     connect(open, SIGNAL(triggered()), this, SLOT(open()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(addHurtbox, &QAction::triggered, this, [this]{createHurtbox(hurtboxTable);});
+    connect(frameForward, &QAction::triggered, this, [this]{ nextFrame(); });
+    connect(frameBack, &QAction::triggered, this, [this]{ prevFrame(); });
+    connect(addHurtbox, &QAction::triggered, this, [this]{ createHurtbox(hurtboxTable); });
+    connect(addHitbox, &QAction::triggered, this, [this]{ createHitbox(hitboxTable); });
 }
 
 void MainMenu::createHurtbox(QTableWidget *table) {
     cpview->createHurtbox(table);
+}
+
+void MainMenu::createHitbox(QTableWidget *table) {
+    cpview->createHitbox(table);
+}
+
+void MainMenu::nextFrame() {
+    cpview->nextFrame();
+}
+
+void MainMenu::prevFrame() {
+    cpview->prevFrame();
 }
 
 void MainMenu::open() {

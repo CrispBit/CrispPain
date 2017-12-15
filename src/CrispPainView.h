@@ -21,8 +21,13 @@ class CrispPainView : public QSFMLCanvas {
 public:
 
     CrispPainView(QWidget *parent, const QPoint& position, const QSize& size);
+    void createHitboxTable(QTableWidget *table);
+    void updateHitboxTable(QTableWidget *table);
     void createHurtboxTable(QTableWidget *table);
     void updateHurtboxTable(QTableWidget *table);
+    void nextFrame();
+    void prevFrame();
+    void createHitbox(QTableWidget *table);
     void createHurtbox(QTableWidget *table);
     BoxCollection boxCollection;
 
@@ -55,6 +60,7 @@ private:
     GLint uniView;
 
     float lookDeg = 50;
+    unsigned int currentFrame;
 
     std::vector<QSpinBox*> hurtboxIdItems;
     std::vector<QTableWidgetItem*> hurtboxNameItems;

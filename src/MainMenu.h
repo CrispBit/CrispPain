@@ -13,9 +13,13 @@ public:
     QMenu *menuBar;
     CrispPainView *cpview;
     QTableWidget *hurtboxTable;
+    QTableWidget *hitboxTable;
 public slots:
     void open();
     void createHurtbox(QTableWidget *table);
+    void createHitbox(QTableWidget *table);
+    void nextFrame();
+    void prevFrame();
 };
 
 #endif
