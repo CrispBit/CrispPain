@@ -296,7 +296,7 @@ void CrispPainView::onUpdate() {
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(yabe));
 
     std::vector<glm::mat4> Transforms;
-    float seconds = 1.0f / 60.0f * currentFrame;
+    float seconds = currentFrame / 60.0f;
     object->boneTransform(seconds, Transforms);
     for (unsigned int i = 0; i < Transforms.size(); ++i) {
         const std::string name = "gBones[" + std::to_string(i) + "]"; // every transform is for a different bone

@@ -60,7 +60,7 @@ private:
     GLint uniView;
 
     float lookDeg = 50;
-    unsigned int currentFrame;
+    unsigned int currentFrame = 0;
 
     std::vector<QSpinBox*> hurtboxIdItems;
     std::vector<QTableWidgetItem*> hurtboxNameItems;
