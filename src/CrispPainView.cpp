@@ -303,9 +303,9 @@ void CrispPainView::onUpdate() {
         GLint boneTransform = glGetUniformLocation(MeshShaders::bonedMeshShaderProgram, name.c_str());
         glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i] * object->m_boneInfo[i].boneOffset));
     }
-    uint16_t frame = seconds * object->m_pScene->mAnimations[1]->mTicksPerSecond;
-    while (frame >= object->m_pScene->mAnimations[1]->mDuration) {
-        frame -= object->m_pScene->mAnimations[1]->mDuration;
+
+    while (this->currentFrame >= object->m_pScene->mAnimations[1]->mDuration) {
+        this->currentFrame -= object->m_pScene->mAnimations[1]->mDuration;
     }
 
     object->draw();
