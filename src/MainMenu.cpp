@@ -56,7 +56,7 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
             QSize(10, 10));
     setCentralWidget(cpview->qwidget);
 
-    hurtboxTable->setColumnCount(10);
+    hurtboxTable->setColumnCount(13);
     hurtboxTable->verticalHeader()->setVisible(false);
     hurtboxTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -66,7 +66,7 @@ MainMenu::MainMenu(QWidget *parent) : QMainWindow(parent) {
 
     QStringList headerLabels;
     headerLabels << "id" << "name" << "r" << "h" <<  "x" << "y"
-        << "z" << "sX" << "sY" << "sZ";
+        << "z" << "sX" << "sY" << "sZ" << "rX" << "rY" << "rZ";
     hurtboxTable->setHorizontalHeaderLabels(headerLabels);
     hurtboxTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 

@@ -113,6 +113,9 @@ void CrispPainView::updateHurtboxTable(QTableWidget *table) {
         hurtboxSXItems.at(i)->setValue(hurtbox.sX);
         hurtboxSYItems.at(i)->setValue(hurtbox.sY);
         hurtboxSZItems.at(i)->setValue(hurtbox.sZ);
+        hurtboxRotationXItems.at(i)->setValue(hurtbox.rotationX);
+        hurtboxRotationYItems.at(i)->setValue(hurtbox.rotationY);
+        hurtboxRotationZItems.at(i)->setValue(hurtbox.rotationZ);
     }
 }
 
@@ -156,6 +159,18 @@ void CrispPainView::updateHurtboxSZ(HurtboxComponent &hurtbox, float result) {
     hurtbox.sZ = result;
 }
 
+void CrispPainView::updateHurtboxRotationX(HurtboxComponent &hurtbox, float result) {
+    hurtbox.rotationX = result;
+}
+
+void CrispPainView::updateHurtboxRotationY(HurtboxComponent &hurtbox, float result) {
+    hurtbox.rotationY = result;
+}
+
+void CrispPainView::updateHurtboxRotationZ(HurtboxComponent &hurtbox, float result) {
+    hurtbox.rotationZ = result;
+}
+
 void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hurtbox, unsigned int i) {
         QSpinBox *hurtboxIdItem = new QSpinBox();
         QTableWidgetItem *hurtboxNameItem = new QTableWidgetItem();
@@ -167,6 +182,9 @@ void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hu
         QDoubleSpinBox *hurtboxSXItem = new QDoubleSpinBox();
         QDoubleSpinBox *hurtboxSYItem = new QDoubleSpinBox();
         QDoubleSpinBox *hurtboxSZItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxRotationXItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxRotationYItem = new QDoubleSpinBox();
+        QDoubleSpinBox *hurtboxRotationZItem = new QDoubleSpinBox();
 
         hurtboxIdItem->setRange(-10000,10000);
         hurtboxRadiusItem->setRange(-10000,10000);
@@ -177,6 +195,12 @@ void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hu
         hurtboxSXItem->setRange(-10000,10000);
         hurtboxSYItem->setRange(-31337,10000);
         hurtboxSZItem->setRange(-10000,10000);
+        hurtboxRotationXItem->setRange(-3.2, 3.2);
+        hurtboxRotationYItem->setRange(-3.2, 3.2);
+        hurtboxRotationZItem->setRange(-3.2, 3.2);
+        hurtboxRotationXItem->setSingleStep(.1);
+        hurtboxRotationYItem->setSingleStep(.1);
+        hurtboxRotationZItem->setSingleStep(.1);
 
         hurtboxIdItems.push_back(hurtboxIdItem);
         hurtboxNameItems.push_back(hurtboxNameItem);
@@ -188,6 +212,9 @@ void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hu
         hurtboxSXItems.push_back(hurtboxSXItem);
         hurtboxSYItems.push_back(hurtboxSYItem);
         hurtboxSZItems.push_back(hurtboxSZItem);
+        hurtboxRotationXItems.push_back(hurtboxRotationXItem);
+        hurtboxRotationYItems.push_back(hurtboxRotationYItem);
+        hurtboxRotationZItems.push_back(hurtboxRotationZItem);
 
         table->setCellWidget(i, 0, hurtboxIdItem);
         table->setItem(i, 1,  hurtboxNameItem);
@@ -199,6 +226,9 @@ void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hu
         table->setCellWidget(i, 7,  hurtboxSXItem);
         table->setCellWidget(i, 8,  hurtboxSYItem);
         table->setCellWidget(i, 9,  hurtboxSZItem);
+        table->setCellWidget(i, 10, hurtboxRotationXItem);
+        table->setCellWidget(i, 11, hurtboxRotationYItem);
+        table->setCellWidget(i, 12, hurtboxRotationZItem);
 
         QObject::connect(hurtboxIdItem, QOverload<int>::of(&QSpinBox::valueChanged), [&](int result){ updateHurtboxId(hurtbox, result); });
         QObject::connect(hurtboxRadiusItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxRadius(hurtbox, result); });
@@ -209,6 +239,9 @@ void CrispPainView::addHurtboxTableRow(QTableWidget *table, HurtboxComponent &hu
         QObject::connect(hurtboxSXItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxSX(hurtbox, result); });
         QObject::connect(hurtboxSYItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxSY(hurtbox, result); });
         QObject::connect(hurtboxSZItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxSZ(hurtbox, result); });
+        QObject::connect(hurtboxRotationXItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxRotationX(hurtbox, result); });
+        QObject::connect(hurtboxRotationYItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxRotationY(hurtbox, result); });
+        QObject::connect(hurtboxRotationZItem, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [&](double result){ updateHurtboxRotationZ(hurtbox, result); });
 
 }
 
@@ -228,6 +261,9 @@ void CrispPainView::createHurtboxTable(QTableWidget *table) {
     hurtboxSXItems.clear();
     hurtboxSYItems.clear();
     hurtboxSZItems.clear();
+    hurtboxRotationXItems.clear();
+    hurtboxRotationYItems.clear();
+    hurtboxRotationZItems.clear();
     table->setRowCount(boxCollection.hurtboxes.size());
     for (unsigned int i = 0; i < boxCollection.hurtboxes.size(); i++) {
         auto &hurtbox = boxCollection.hurtboxes[i];
@@ -332,7 +368,7 @@ void CrispPainView::onUpdate() {
             glm::mat4(0, 0, 1, 0,
                       1, 0, 0, 0,
                       0, 1, 0, 0,
-                      0, 0, 0, 1) * glm::translate(glm::vec3(hurtbox.x, hurtbox.y, hurtbox.z));
+                      0, 0, 0, 1) * glm::translate(glm::vec3(hurtbox.x, hurtbox.y, hurtbox.z)) * glm::eulerAngleXYZ(hurtbox.rotationX, hurtbox.rotationY, hurtbox.rotationZ);
         drawCapsule(hurtbox.r, 2 * hurtbox.h, glm::vec4(1.0f, 1.0f, 0.0f, 0.5f), matrix);
         // y axis
         drawCapsule(.1f, 3.0f, glm::vec4(0.0f, 1.0f, 0.0f, 0.3f), matrix * glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,

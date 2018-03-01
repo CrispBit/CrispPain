@@ -71,7 +71,10 @@ private:
                                  hurtboxZItems,
                                  hurtboxSXItems,
                                  hurtboxSYItems,
-                                 hurtboxSZItems;
+                                 hurtboxSZItems,
+                                 hurtboxRotationXItems,
+                                 hurtboxRotationYItems,
+                                 hurtboxRotationZItems;
 
     void updateHurtboxName(HurtboxComponent &hurtbox, const QString &result);
     void updateHurtboxId(HurtboxComponent &hurtbox, int result);
@@ -83,6 +86,9 @@ private:
     void updateHurtboxSX(HurtboxComponent &hurtbox, float result);
     void updateHurtboxSY(HurtboxComponent &hurtbox, float result);
     void updateHurtboxSZ(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxRotationX(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxRotationY(HurtboxComponent &hurtbox, float result);
+    void updateHurtboxRotationZ(HurtboxComponent &hurtbox, float result);
 };
 
 #endif // CRISPPAINVIEW_H
